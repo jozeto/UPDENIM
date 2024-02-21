@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+{% block title %} Registrar Empleado {% endblock %}
+
+{% block body %}
+
+
+
+<div class="row">
+    <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4">
+        <h2>Gestion Empleados</h2>
+        <div class="card">
+            <div class="card-body">
+                <form action="/registrarEmpleado/" method="POST"> {% csrf_token %}
+                    <div class="form-group">
+                        <label for="txtdocumento">Documento Identidad</label>
+                        <input type="text" id="txtdocumento" name="txtdocumento" class="form-control" placeholder="Numero Documento Identidad" 
+                        pattern=".{5,12}" title="El documento debe tener entre 5 y 12 caracteres." minlength="5" maxlength="12" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtprimernombre">Primer Nombre</label>
+                        <input type="text" id="txtprimernombre" name="txtprimernombre" class="form-control" placeholder="Primer Nombre" 
+                            minlength="3" maxlength="25" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtsegundonombre">Segundo Nombre</label>
+                        <input type="text" id="txtsegundonombre" name="txtsegundonombre" class="form-control" placeholder="Segundo Nombre" 
+                            minlength="3" maxlength="25">
+                    </div>
+                    <div class="form-group">
+                        <label for="txtprimerapellido">Primer Apellido</label>
+                        <input type="text" id="txtprimerapellido" name="txtprimerapellido" class="form-control" placeholder="Primer Apellido" 
+                            minlength="3" maxlength="25" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtsegundoapellido">Segundo Apellido</label>
+                        <input type="text" id="txtsegundoapellido" name="txtsegundoapellido" class="form-control" placeholder="Segundo Apellido" 
+                            minlength="3" maxlength="25">
+                    </div>
+                    <div class="form-group">
+                        <label for="txttelefono">Telefono</label>
+                        <input type="text" id="txttelefono" name="txttelefono" class="form-control" placeholder="Telefono de Contacto" 
+                            pattern="[0-9]{8,12}" title="Ingrese un número de teléfono válido (entre 7 y 10 dígitos)."
+                            minlength="7" maxlength="10" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtcorreo">Correo Electronico</label>
+                        <input type="email" id="txtcorreo" name="txtcorreo" class="form-control" placeholder="Correo Electronico" 
+                            minlength="7" maxlength="50" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtciudad">Ciudad</label>
+                        <input type="text" id="txtciudad" name="txtciudad" class="form-control" placeholder="Ciudad" 
+                            minlength="4" maxlength="25" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtdireccion">Direccion</label>
+                        <input type="text" id="txtdireccion" name="txtdireccion" class="form-control" placeholder="Direccion Residencia" 
+                            minlength="8" maxlength="50" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtbarrio">Barrio</label>
+                        <input type="text" id="txtbarrio" name="txtbarrio" class="form-control" placeholder="Barrio" 
+                            minlength="4" maxlength="25" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtfechaingreso">Fecha Ingreso</label>
+                        <input type="date" id="txtfechaingreso" name="txtfechaingreso" class="form-control" placeholder="Fecha de Ingreso" 
+                            minlength="8" maxlength="12" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtfechanacimiento">Fecha Nacimiento</label>
+                        <input type="date" id="txtfechanacimiento" name="txtfechanacimiento" class="form-control" placeholder="Fecha de Nacimiento" 
+                            maxlength="12" required>
+                    </div>
+                   
+
+
+                    <div class="form-group">
+                        <label for="txtgenero">Genero</label>
+                        <select id="txtgenero" name="txtgenero" class="form-control" required>
+                            <option value="">Selecciona un Género</option>
+                            <option value="M">Masculino</option>
+                            <option value="F">Femenino</option>
+                        </select>
+                    </div>
+
+                    
+                    <h6>Cargo</h6>
+                    <select id="txtcargo" name="txtcargo" class="form-control" required>
+                        <option value="">Seleccione un Cargo</option>
+                        {% for cargo in cargos %}
+                            <option value="{{ cargo.id }}">{{ cargo }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <div class="form-group">
+                        <label for="txtsalario">Salario</label>
+                        <input type="text" id="txtsalario" name="txtsalario" class="form-control" placeholder="Salario" 
+                            min="1300000" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtrh">RH</label>
+                        <select id="txtrh" name="txtrh" class="form-control" required>
+                            <option value="">Seleccione Rh</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="txteps">Eps</label>
+                        <input type="text" id="txteps" name="txteps" class="form-control" placeholder="Eps" 
+                            maxlength="25" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtcargo">Arl</label>
+                        <input type="text" id="txtarl" name="txtarl" class="form-control" placeholder="Arl" 
+                            maxlength="25" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtpension">Fondo Persion</label>
+                        <input type="text" id="txtpension" name="txtpension" class="form-control" placeholder="Fondo de Pension" 
+                            maxlength="25" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtuser">Usuario</label>
+                        <input type="text" id="txtuser" name="txtuser" class="form-control" placeholder="Usuario" 
+                            maxlength="25" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtpassword">Contraseña</label>
+                        <input type="password" id="txtpassword" name="txtpassword" class="form-control" placeholder="Contraseña" 
+                            maxlength="25" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtrolus">Rol Usuario</label>
+                        <input type="text" id="txtrolus" name="txtrolus" class="form-control" placeholder="Rol Usuario" 
+                            maxlength="25" required>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success btn-block text-whith">Guardar</button>
+                    </div>
+              </form>
+            </div>
+        </div>    
+    </div>  
+    <div class="col-md-6">
+        <h2 class="mb-4">Listado de Empleados</h2>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>No.</th> 
+                       <th>Documento Identidad</th>
+                       <th>Primer Nombre</th>
+                       <th>Segundo Nombre</th>
+                       <th>Primer Apellido</th>
+                       <th>Segundo Apellido</th>
+                       <th>Telefono</th>
+                       <th>Correo</th>
+                       <th>Ciudad</th>
+                       <th>Direccion</th>
+                       <th>Barrio</th>
+                       <th>idempleado</th>                       
+                       <th>Fecha Ingreso</th>
+                       <th>Fecha Nacimiento</th>
+                       <th>Genero</th>
+                       <th>cargo</th>
+                       <th>salario</th>
+                       <th>RH</th>
+                       <th>Eps</th>
+                       <th>Arl</th>
+                       <th>F. Pension</th>
+                       <th>usuario</th>
+                       <th>contraseña</th>
+                       <th>rol</th>
+                       <th colspan="2">Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in empleados %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{c.idDocumentoEmp}}</td>
+                        <td>{{c.iddocumento.primernombre}}</td>
+                        <td>{{c.iddocumento.segundonombre}}</td>
+                        <td>{{c.iddocumento.primerapellido}}</td>
+                        <td>{{c.iddocumento.segundoapellido}}</td>
+                        <td>{{c.iddocumento.idcontacto.telefono}}</td>
+                        <td>{{c.iddocumento.idcontacto.correo}}</td>
+                        <td>{{c.iddocumento.iddireccion.idciudad.ciudad}}</td>
+                        <td>{{c.iddocumento.iddireccion.direccion}}</td>
+                        <td>{{c.iddocumento.iddireccion.barrio}}</td>
+                        <td>{{c.idEmpleado}}</td>
+                        <td>{{c.fechaingreso}}</td>
+                        <td>{{c.fechanacimiento}}</td>
+                        <td>{{c.iddocumento.idgenero.genero}}</td>
+                        <td>{{c.idcargoempleado.cargoempleado}}</td>
+                        <td>{{c.salario}}</td>
+                        <td>{{c.rh}}</td>
+                        <td>{{c.ideps.eps}}</td> 
+                        <td>{{c.idarl.arl}}</td>
+                        <td>{{c.idFondoPension.fondoPension}}</td>
+                        <td>{{c.iduser.username}}</td>
+                        <td>{{c.iduser.password}}</td>
+                        <td>{{c.idrol.rol}}</td>
+                        <td><a href="edicionEmpleado/{{c.idempleado}}" class="btn btn-info" onclick="return confirm('¿Estás seguro de que quieres editar los campos de este empleado?')">Editar<a/></td>
+                        <td><a href="eliminarEmpleado/{{c.idempleado}}" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar este empleado?')">Eliminar<a/></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            
+            </table>
+            
+        </div>
+    </div> 
+
+
+</div>
+{% endblock %}

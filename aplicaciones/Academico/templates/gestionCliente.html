@@ -1,0 +1,102 @@
+{% extends "./base.html" %}
+
+{% block title %} Fidelizar de Cliente {% endblock %}
+
+
+{% block body %}
+
+
+
+<div class="row">
+    <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4">
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-dismissible alert-success">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong class="text-dark">{{ message }}</strong>
+        </div>
+        {% endfor %}
+        {% endif %}
+        
+        <h2> Crear  Cliente </h2>  
+       
+        <div class="card">
+            <div class="card-body">
+                <form action="/registrarCliente/" method="POST">  {% csrf_token %}
+                    <div class="form-group">
+
+                       
+
+                    
+
+                    <div class="form-group">
+                        <h6>Documento Cliente</h6>
+                        <input type="text" id="txtDocumento" name="txtDocumento" class="form-control" placeholder="Documento Cliente" minlength="1" maxlength="58"  required>
+                    </div>
+
+                    <div class="form-group">
+                        <h6>Id Comercio</h6>
+                        <input type="text" id="txtComercio" name="txtComercio"  class="form-control" placeholder="Tipo Comercio" minlength="1" maxlength="58"  required>
+                    </div>
+
+                    <div class="form-group">
+                        <h6>Tipo Cliente</h6>
+                        <input type="text" id="txtTipo" name="txtTipo"  class="form-control" placeholder="Tipo Cliente" minlength="1" maxlength="58" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <h6>Cupos de Credito</h6>
+                        <input type="text" id="txtCupo" name="txtCupo" class="form-control" placeholder="Cupos de credito" minlength="1" maxlength="58"  required>
+                    </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success btn-block text-white">Guardar</button>
+                        </div>  
+                 </form>
+
+            </div>
+            </div>
+        </div>
+    </div>
+<div class="col-sm-12 col-md-6 col-lg-8 col-xl-8">
+
+    <h1> Listado de clientes </h1>       <a href="{% url 'exportar_clientes' %}" class="btn btn-primary">Exportar a XLS</a> 
+
+<div class="table-responsive py-2">
+</div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>id cliente</th>
+                <th>Cupo Credito</th>
+                <th>Documento cliente</th>
+                <th>Tipo Comercio</th>
+                <th colspan="2">Opciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for cliente in cliente%}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{cliente.idCliente}}</td>
+                    <td>{{cliente.cupoCredito}}</td>
+                    <td>{{cliente.idDocumentoCli}}</td>
+                    <td>{{cliente.idTipoComercio}}</td>
+                    <td><a href="{% url 'edicionCliente' cliente.idCliente %}" class="btn btn-info">Editar</a></td>
+                    <td><a href="{% url 'eliminarCliente' cliente.idCliente %}" class="btn btn-danger btnEliminacion">Eliminar</a></td>
+    
+                    
+                   
+                    
+                </tr>    
+            {% endfor%}
+            </tbody>
+    </table>
+</div>
+
+
+</div>
+</div>
+{% endblock %}

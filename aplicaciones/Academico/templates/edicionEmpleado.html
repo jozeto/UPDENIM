@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% block title %} Editar Empleado {% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-md-4 offset-md-4">
+        <h2>Editar Empleado</h2>
+        <div class="card">
+            <div class="card-body">
+                <form method="POST" action="{% url 'editarEmpleado' idempleado=empleado.idempleado %}"> {% csrf_token %}
+                    <div class="form-group">
+                        <label for="txtdocumento">Documento Identidad</label>
+                        <input type="text" id="txtdocumento" name="txtdocumento" value="{{empleado.iddocumento.iddocumento}}" class="form-control" placeholder="Documento Identidad" 
+                            pattern=".{5,12}" title="El documento debe tener entre 5 y 12 caracteres." minlength="5" maxlength="12" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtprimernombre">Primer Nombre</label>
+                        <input type="text" id="txtprimernombre" name="txtprimernombre" value="{{empleado.iddocumento.primernombre}}" class="form-control" placeholder="Primer Nombre" 
+                            minlength="3" maxlength="25" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtsegundonombre">Segundo Nombre</label>
+                        <input type="text" id="txtsegundonombre" name="txtsegundonombre" value="{{empleado.iddocumento.segundonombre}}" class="form-control" placeholder="Segundo Nombre" 
+                            minlength="3" maxlength="25">
+                    </div>
+                    <div class="form-group">
+                        <label for="txtprimerapellido">Primer Apellido</label>
+                        <input type="text" id="txtprimerapellido" name="txtprimerapellido" value="{{empleado.iddocumento.primerapellido}}" class="form-control" placeholder="Primer Apellido" 
+                            minlength="3" maxlength="25" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtsegundoapellido">Segundo Apellido</label>
+                        <input type="text" id="txtsegundoapellido" name="txtsegundoapellido" value="{{empleado.iddocumento.segundoapellido}}" class="form-control" placeholder="Segundo Apellido" 
+                            minlength="3" maxlength="25">
+                    </div>
+                    <div class="form-group">
+                        <label for="txttelefono">Telefono</label>
+                        <input type="text" id="txttelefono" name="txttelefono" value="{{empleado.iddocumento.idcontacto.telefono}}" class="form-control" placeholder="Telefono" 
+                        pattern="[0-9]{8,12}" title="Ingrese un número de teléfono válido (entre 7 y 10 dígitos)." minlength="7" maxlength="10" required >
+                    </div>
+                    <div class="form-group">
+                        <label for="txtcorreo">Correo Electronico</label>
+                        <input type="email" id="txtcorreo" name="txtcorreo" value="{{empleado.iddocumento.idcontacto.correo}}" class="form-control" placeholder="Correo Electronico" 
+                            minlength="7" maxlength="50" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtciudad">Ciudad</label>
+                        <input type="text" id="txtciudad" name="txtciudad" value="{{empleado.iddocumento.iddireccion.idciudad.ciudad}}" class="form-control" placeholder="Ciudad" 
+                            minlength="4" maxlength="50" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtdireccion">Direccion</label>
+                        <input type="text" id="txtdireccion" name="txtdireccion" value="{{empleado.iddocumento.iddireccion.direccion}}" class="form-control" placeholder="Direccion" 
+                            minlength="8" maxlength="50" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtbarrio">Barrio</label>
+                        <input type="text" id="txtbarrio" name="txtbarrio" value="{{empleado.iddocumento.iddireccion.barrio}}" class="form-control" placeholder="Barrio" 
+                            minlength="4" maxlength="25" required>
+                    </div>
+                    <h6>idEmpeado</h6>
+                    <div class="form-group">
+                        <label for="txtidempleado">id Empleado</label>
+                        <input type="text" id="txtidempleado" name="txtidempleado" value="{{empleado.idempleado}}" class="form-control" placeholder="idEmpleado" 
+                            minlength="1" maxlength="12" readonly required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtfechaingreso">Fecha Ingreso</label>
+                        <input type="date" id="txtfechaingreso" name="txtfechaingreso" class="form-control" placeholder="Fecha de Ingreso" 
+                             value="{% if empleado.fechaingreso %}{{ empleado.fechaingreso|date:'Y-m-d' }}{% endif %}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="txtfechanacimiento">Fecha Nacimiento</label>
+                        <input type="date" id="txtfechanacimiento" name="txtfechanacimiento" class="form-control" placeholder="Fechan de Nacimiento" 
+                            maxlength="12" value="{% if empleado.fechanacimiento %}{{ empleado.fechanacimiento|date:'Y-m-d' }}{% endif %}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtgenero">Genero</label>
+                        <select id="txtgenero" name="txtgenero" value="{{empleado.iddocumento.idgenero.genero}}" class="form-control" required>
+                            <option value="">Selecciona un Género</option>
+                            <option value="M" {% if empleado.iddocumento.idgenero.genero == 'M' %} selected {% endif %}>Masculino</option>
+                            <option value="F" {% if empleado.iddocumento.idgenero.genero == 'F' %} selected {% endif %}>Femenino</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtcargo">Cargo</label>
+                        <select id="txtcargo" name="txtcargo" class="form-control" required>
+                            <option value="">Seleccione un Cargo</option>
+                            <option value="Gerente" {% if empleado.idcargogoempleado.cargoempleado == "Gerente" %} selected {% endif %}>Gerente</option>
+                            <option value="Administrador" {% if empleado.idcargoempleado.cargoempleado == "Administrador" %} selected {% endif %}>Administrador</option>
+                            <option value="Vendedor" {% if empleado.idcargoempleado.cargoempleado == "Vendedor" %} selected {% endif %}>Vendedor</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtsalario">Salario</label>
+                        <input type="text" id="txtsalario" name="txtsalario" value="{{ empleado.salario }}" class="form-control" placeholder="Salario" 
+                            min="1300000" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtrh">RH</label>
+                        <select id="txtrh" name="txtrh" class="form-control" required>
+                            <option value="">Seleccione RH</option>
+                            <option value="A+" {% if empleado.rh == 'A+' %} selected {% endif %}>A+</option>
+                            <option value="A-" {% if empleado.rh == 'A-' %} selected {% endif %}>A-</option>
+                            <option value="B+" {% if empleado.rh == 'B+' %} selected {% endif %}>B+</option>
+                            <option value="B-" {% if empleado.rh == 'B-' %} selected {% endif %}>B-</option>
+                            <option value="AB+" {% if empleado.rh == 'AB+' %} selected {% endif %}>AB+</option>
+                            <option value="AB-" {% if empleado.rh == 'AB-' %} selected {% endif %}>AB-</option>
+                            <option value="O+" {% if empleado.rh == 'O+' %} selected {% endif %}>O+</option>
+                            <option value="O-" {% if empleado.rh == 'O-' %} selected {% endif %}>O-</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="txteps">Eps</label>
+                        <input type="text" id="txteps" name="txteps" value="{{empleado.ideps.eps}}" class="form-control" placeholder="Eps" 
+                            maxlength="25" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtcargo">Arl</label>
+                        <input type="text" id="txtarl" name="txtarl" value="{{empleado.idarl.arl}}" class="form-control" placeholder="Arl" 
+                            maxlength="25" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtpension">Fondo Pension</label>
+                        <input type="text" id="txtpension" name="txtpension" value="{{empleado.ifondopension.fondopension}}" class="form-control" placeholder="Fondo de Pension" 
+                            maxlength="25" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtuser">Usuario</label>
+                        <input type="text" id="txtuser" name="txtuser" value="{{empleado.iduser.user}}" class="form-control" placeholder="Usuario" 
+                            maxlength="25" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtpassword">Contraseña</label>
+                        <input type="password" id="txtpassword" name="txtpassword" value="{{empleado.iduser.password}}" class="form-control" placeholder="Contraseña" 
+                            maxlength="25" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtrolus">Rol Usuario</label>
+                        <input type="text" id="txtrolus" name="txtrolus" value="{{empleado.idrol.rol}}" class="form-control" placeholder="Rol Usuario" 
+                            maxlength="25" required>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success btn-block text-whith">Guardar</button>
+                    </div>
+
+    </div>
+
+
+</div>
+
+{% endblock %}
