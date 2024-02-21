@@ -46,11 +46,20 @@
                 
 
 
-                {% if request.user.is_authenticated %}
-                <li><a href={% url 'exit' %}>Cerrar Sesion</a></li>
-                {% else %}
-                <li><a href={% url 'login' %}>Ingresar</a></li>
-                {% endif %}
+                
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <!-- Otros elementos de la barra de navegación -->
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            {% if request.user.is_authenticated %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'exit' %}">Cerrar Sesión</a></li>
+            {% else %}
+                <!-- Otros elementos de la barra de navegación para usuarios no autenticados -->
+            {% endif %}
+        </ul>
+    </div>
             </ul>
         </div>
     </nav>
