@@ -25,12 +25,7 @@ class Rol(models.Model):
         return f"{self.rol}"
     
     
-class Usuario(models.Model):
-    iduser = models.AutoField(primary_key=True)
-    usuario = models.CharField(max_length=45, unique=True)
-    password = models.CharField(max_length=10, null=False, blank=False)
 
-    
 
     
 class Arl(models.Model):
@@ -118,6 +113,8 @@ class Usuario(models.Model):
     usuario = models.CharField(max_length=45, unique=True)
     password = models.CharField(max_length=10, null=False, blank=False)
     password = models.CharField(max_length=10, null=False, blank=False)
+    def __str__(self):
+        return f"{self.usuario}"
 
 
 class Empleado(models.Model):
@@ -162,6 +159,8 @@ class Ventas(models.Model):
 class Categoriaproducto(models.Model):
     idcategoriaproducto = models.AutoField(primary_key=True)
     categoriaproducto = models.CharField(max_length=45, blank=False, null=False)
+    def __str__(self):
+        return f"{self.categoriaproducto}"
 
 
 
@@ -188,6 +187,8 @@ class Formapago(models.Model):
 class Tipomovimiento(models.Model):
     idtipomovimiento = models.AutoField(primary_key=True)
     tipomovimiento = models.CharField(max_length=45, null=False, blank=False)
+    def __str__(self):
+        return f"{self.tipomovimiento}"
 
 class Tiponovedadpersonal(models.Model):
     idtiponovedadpersonal = models.AutoField(primary_key=True)
@@ -204,6 +205,8 @@ class Tipopqr(models.Model):
 class Ubicacioninventario(models.Model):
     idubicacioninventario = models.AutoField(primary_key=True)
     ubicacioninventario = models.CharField(max_length=45, null=False, blank=False)
+    def __str__(self):
+        return f"{self.ubicacioninventario}"
 
 class Talla(models.Model):
     idtalla = models.AutoField(primary_key=True)
@@ -222,6 +225,8 @@ class Producto(models.Model):
     descripcionproducto = models.CharField(max_length=45)
     idcategoriaproducto = models.ForeignKey(Categoriaproducto, on_delete=models.CASCADE)
     idtalla = models.ForeignKey(Talla, on_delete=models.CASCADE)
+    def __str__(self):
+        return f"{self.nombreproducto}"
 
 class Novedadpersonal(models.Model):
     idnovedadpersonal = models.AutoField(primary_key=True)
@@ -258,8 +263,10 @@ class Inventario(models.Model):
     cantidadproductos = models.IntegerField(null=False, blank=False)  # Field name made lowercase.
     idproductoinv = models.ForeignKey(Producto, on_delete=models.CASCADE)  # Field name made lowercase.
     idtipomovimientoinv = models.ForeignKey(Tipomovimiento, on_delete=models.CASCADE)  # Field name made lowercase.
-    idempleado = models.ForeignKey(Empleado, on_delete=models.CASCADE)  # Field name made lowercase.
+    idEmpleado = models.ForeignKey(Empleado, on_delete=models.CASCADE)  # Field name made lowercase.
     idubicacioninventarioinv = models.ForeignKey(Ubicacioninventario, on_delete=models.CASCADE)  # Field name made lowercase.
+    def __str__(self):
+        return f"{self.idinventario}"
 
 class Comprobanteventa(models.Model):
     idcomprobanteventa = models.AutoField(primary_key=True)  # Field name made lowercase.

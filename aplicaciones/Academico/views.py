@@ -17,6 +17,7 @@ import xlwt
 import pandas as pd
 from datetime import datetime
 from django.db import transaction
+from django.core.exceptions import MultipleObjectsReturned
 
 
 @login_required
@@ -67,6 +68,8 @@ def registrarVenta(request):
 
 @login_required
 def eliminarVenta(request, idVenta):
+    
+    
     venta = Ventas.objects.get(idVenta=idVenta)
     eliminarVenta = Ventas.objects.all()
     venta.delete()
@@ -324,8 +327,6 @@ def personal(request):
     
     return render(request, "novedadesPersonal.html", context)
 
-from django.contrib.auth.models import User
-from django.db import transaction
 
 @transaction.atomic
 def registrarEmpleado(request):
@@ -347,11 +348,9 @@ def registrarEmpleado(request):
         pension, _ = Fondopension.objects.get_or_create(fondoPension=request.POST.get('txtpension'))
 
         # Obtener o crear usuario
-        usuario = request.POST.get('txtuser')
-        usuario, created = Usuario.objects.get_or_create(usuario=usuario)
-        if created:
-            usuario.password(request.POST.get('txtpassword'))
-            usuario.save()
+        usuario_nombre = request.POST.get('txtuser')
+        password = request.POST.get('txtpassword')
+        usuario, _ = Usuario.objects.get_or_create(usuario=usuario_nombre, password=password)
 
         # Crear persona y empleado
         persona, _ = Persona.objects.get_or_create(iddocumento=request.POST.get('txtdocumento'), primernombre=request.POST.get('txtprimernombre'),
@@ -361,7 +360,7 @@ def registrarEmpleado(request):
 
         empleado = Empleado.objects.create(fechaIngreso=request.POST.get('txtfechaingreso'), fechaNacimiento=request.POST.get('txtfechanacimiento'),
                                     salario=request.POST.get('txtsalario'), rh=request.POST.get('txtrh'), idDocumentoEmp=persona,
-                                    idarl=arl, ideps=eps, idFondoPension=pension, idCargoEmpleado=cargo, usuario=usuario, idrol=rol)
+                                    idarl=arl, ideps=eps, idFondoPension=pension, idCargoEmpleado=cargo, iduser=usuario, idrol=rol)
 
     cargos = CargoEmpleado.objects.all()
     genero = Genero.objects.all()
@@ -369,7 +368,7 @@ def registrarEmpleado(request):
     personas = Persona.objects.all()
     fondo = Fondopension
 
-    return render(request, "novedadesPersonal.html", {"cargos": cargos, "genero": genero, "empleados":empleados, "personas": persona})
+    return render(request, "novedadesPersonal.html", {"cargos": cargos, "genero": genero, "empleados":empleados, "personas": personas})
 
 
 
@@ -383,7 +382,7 @@ def editarEmpleado(request, idempleado):
 
     if request.method == 'POST':
         # Actualizar los campos del empleado con los datos del formulario
-        empleado.fechaingreso = datetime.strptime(request.POST.get('txtfechaingreso'), '%Y-%m-%d').date()
+        idempleado.fechaingreso = datetime.strptime(request.POST.get('txtfechaingreso'), '%Y-%m-%d').date()
         empleado.fechanacimiento = datetime.strptime(request.POST.get('txtfechanacimiento'), '%Y-%m-%d').date()
 
         # Acceder a los atributos del modelo relacionado
@@ -434,3 +433,148 @@ def eliminarEmpleado(request, idempleado):
     empleado.delete()
     
     return redirect('/')
+
+
+
+# -------------------------------------INVENTARIO---------------------------------------
+def home(request):
+    inventarios=Inventario.objects.all()
+    productos = Producto.objects.all()
+    empleado = Empleado.objects.all()
+    categoriaproductos=Categoriaproducto.objects.all()
+    tallas=Talla.objects.all()
+    inventarios=Inventario.objects.all()
+    tiposmovimientosint=Tipomovimiento.objects.all()
+    ubicacionesinventario=Ubicacioninventario.objects.all()
+    context = {
+        "productos": productos,
+        "categoriaproductos": categoriaproductos,
+        "tallas": tallas,
+        "inventarios": inventarios,
+        "tiposmovimientosint": tiposmovimientosint,
+        "ubicacionesinventario": ubicacionesinventario,
+        "empleados": empleado
+    }
+    
+    return render(request, "gestionInventario.html", context)
+
+def vistaInventario(request):
+
+    # Obtener todos los productos, empleados e inventarios
+    productos = Producto.objects.all()
+    empleados = Empleado.objects.all()
+    inventarios = Inventario.objects.all()
+    
+    # Renderizar la plantilla con los datos obtenidos
+    return render(request, "gestionInventario.html", {
+        "productos": productos,
+        "empleados": empleados,
+        "inventarios": inventarios
+    })
+
+
+def registrarInventario(request):
+    if request.method == 'POST':
+        # Obtener datos del formulario
+        fechainventario = request.POST.get('txtfechainventario')
+        cantidadproductos = request.POST.get('txtcantidadproductos')
+        nombreproducto = request.POST.get('txtnombreproducto')
+        precioventa = request.POST.get('txtprecioventa')
+        descripcionproducto = request.POST.get('txtdescripcionproducto')
+        categoriaproducto = request.POST.get('txtcategoriaproducto')
+        talla = request.POST.get('txttalla')
+        tipomovimiento = request.POST.get('txttipomovimiento')
+        ubicacioninventario = request.POST.get('txtubicacioninventario')
+        idEmpleado = request.POST.get('txtidempleado')
+
+        # Obtener o crear objetos relacionados
+        categoria, created = Categoriaproducto.objects.get_or_create(categoriaproducto=categoriaproducto)
+        talla, created = Talla.objects.get_or_create(talla=talla)
+        ubicacioninventario, created = Ubicacioninventario.objects.get_or_create(ubicacioninventario=ubicacioninventario)
+        empleado, created = Empleado.objects.get_or_create(idEmpleado=idEmpleado)
+
+        try:
+            # Intenta recuperar el Tipomovimiento
+            tipomovimiento_obj = Tipomovimiento.objects.get(tipomovimiento=tipomovimiento)
+        except Tipomovimiento.DoesNotExist:
+            # Si no existe, crea uno nuevo
+            tipomovimiento_obj = Tipomovimiento.objects.create(tipomovimiento=tipomovimiento)
+        except MultipleObjectsReturned:
+            # Si se devuelve más de un objeto, maneja el caso aquí
+            # Por ejemplo, puedes tomar el primero de la lista
+            tipomovimiento_obj = Tipomovimiento.objects.filter(tipomovimiento=tipomovimiento).first()
+
+        # Crear el producto
+        producto, created = Producto.objects.get_or_create(nombreproducto=nombreproducto, precioventa=precioventa, descripcionproducto=descripcionproducto,
+                                       idcategoriaproducto=categoria, idtalla=talla)
+
+        # Crear el inventario
+        inventario = Inventario.objects.create(fechainventario=fechainventario, cantidadproductos=cantidadproductos, idproductoinv=producto,
+                                       idtipomovimientoinv=tipomovimiento_obj, idEmpleado=empleado, idubicacioninventarioinv=ubicacioninventario)
+
+        return render(request, "gestionInventario.html")
+ 
+
+def edicionInventario(request, idinventario):
+    inventario=Inventario.objects.get(idinventario=idinventario)
+    return render(request, "edicionInventario.html", {"inventario":inventario})
+
+
+def editarInventario(request, idinventario):
+    # Obtener el inventario que se va a editar
+    inventario = Inventario.objects.get(idinventario=idinventario)
+
+    if request.method == 'POST':
+        # Actualizar los campos del inventario con los datos del formulario
+        inventario.fechainventario = datetime.strptime(request.POST.get('txtfechainventario'), '%Y-%m-%d').date()
+        
+        # Acceder a los atributos del modelo relacionado Producto
+        inventario.idproductoinv.nombreproducto = request.POST.get('txtnombreproducto')
+        inventario.idproductoinv.precioventa = request.POST.get('txtprecioventa')
+        inventario.idproductoinv.descripcionproducto = request.POST.get('txtdescripcionproducto')
+        
+        # Guardar el contacto asociado al empleado
+        inventario.idproductoinv.idcategoriaproducto.categoriaproducto = request.POST.get('txtcategoriaproducto')
+        tipo_movimiento = request.POST.get('txttipomovimiento')
+        tipo_movimiento_instancia, created = Tipomovimiento.objects.get_or_create(tipomovimiento=tipo_movimiento)
+        inventario.idtipomovimientoinv = tipo_movimiento_instancia
+        
+        ubicacion_inventario = request.POST.get("txtubicacioninventario")
+        ubicacion_inventario_instancia, created = Ubicacioninventario.objects.get_or_create(ubicacioninventario=ubicacion_inventario)
+        inventario.idubicacioninventarioinv = ubicacion_inventario_instancia
+        # Guardar la dirección asociada al empleado
+        inventario.idproductoinv.idtalla.talla = request.POST.get('txttalla')
+
+        inventario.cantidadproductos = request.POST.get('txtcantidadproductos')
+
+        # Obtener el id del empleado del formulario
+        id_empleado = request.POST.get('txtidempleado')
+
+        # Obtener o crear el objeto Empleado
+        empleado_obj, created = Empleado.objects.get_or_create(idempleado=id_empleado)
+
+        # Asignar el objeto Empleado al inventario
+        inventario.idempleado = empleado_obj
+
+        # Guardar los cambios
+        inventario.save()
+        inventario.idproductoinv.save() # Guardar el producto relacionado
+        inventario.idproductoinv.idcategoriaproducto.save() # Guardar la categoría de producto relacionada
+        inventario.idtipomovimientoinv.save()
+        inventario.idproductoinv.idtalla.save() # Guardar la talla relacionada
+
+        return redirect('vistaInventario')  # Redirige a la página principal
+
+    # Si no es una solicitud POST, renderiza la página de edición con los datos del inventario
+    return render(request, 'edicionInventario.html', {'inventario': inventario})
+
+
+
+
+
+
+def eliminarInventario(request, idinventario):
+    inventario=Inventario.objects.get(idinventario=idinventario)
+    inventario.delete()
+    
+    return redirect('vistaInventario')

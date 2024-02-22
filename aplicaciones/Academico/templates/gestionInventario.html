@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% block title %} Registrar inventarios {% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4">
+        <h2>Gestion Inventarios</h2>
+        <div class="card">
+            <div class="card-body">
+                <form action="/registrarInventario/" method="POST"> {% csrf_token %}
+                    <div class="form-group">
+                        <label for="txtfechainventario">Fecha Inventario</label>
+                        <input type="date" id="txtfechainventario" name="txtfechainventario" class="form-control" placeholder="Fecha de Inventario" 
+                            minlength="8" maxlength="12" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtcantidadproductos"># Prod.</label>
+                        <input type="text" id="txtcantidadproductos" name="txtcantidadproductos" class="form-control" placeholder="Cantidad" 
+                            min="1" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nombreproducto">Nombre producto</label>
+                        <select id="txtnombreproducto" name="txtnombreproducto" class="form-control" required>
+                            <option value="">Selecciona un producto</option>
+                            {% for producto in productos %}
+                            <option value="{{ producto.nombreproducto }}">{{ producto.nombreproducto }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+
+                    
+                    <div class="form-group">
+                        <label for="txtprecioventa">Precio Venta</label>
+                        <input type="text" id="txtprecioventa" name="txtprecioventa" class="form-control" placeholder="Precio Venta" 
+                            min="1000" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtdescripcionproducto">Descripcion</label>
+                        <input type="text" id="txtdescripcionproducto" name="txtdescripcionproducto" class="form-control" placeholder="Descripcion" 
+                            minlength="4" maxlength="50" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtcategoriaproducto">Categoria</label>
+                        <select id="txtcategoriaproducto" name="txtcategoriaproducto" class="form-control" required>
+                            <option value="">Selecciona tipo Categoria</option>
+                            <option value="Camisas">Camisas</option>
+                            <option value="Camisetas">Camisetas</option>
+                            <option value="jeans">jeans</option>
+                            <option value="Pantalones Drill">Pantalones Drill</option>
+                            <option value="Busos">Busos</option>
+                            <option value="Chaquetas">Chaquetas</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="txttalla">Talla</label>
+                        <select id="txttalla" name="txttalla" class="form-control" required>
+                            <option value="">Selecciona una Talla</option>
+                            <option value="XS">XS</option>
+                            <option value="S">S</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                            <option value="2XL">2XL</option>
+                            <option value="3XL">3XL</option>
+                            <option value="28">28</option>
+                            <option value="30">30</option>
+                            <option value="32">32</option>
+                            <option value="34">34</option>
+                            <option value="36">36</option>
+                            <option value="38">38</option>
+                            <option value="40">40</option>
+                            <option value="42">42</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="txttipomovimiento">Tipo Movimiento</label>
+                        <select id="txttipomovimiento" name="txttipomovimiento" class="form-control" required>
+                            <option value="">Seleccione tipo Movimiento</option>
+                            <option value="Entrada">Entrada</option>
+                            <option value="Salida">Salida</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtubicacioninventario">Ubicacion Inventario</label>
+                        <select id="txtubicacioninventario" name="txtubicacioninventario" class="form-control" required>
+                            <option value="">Selecciona una Ubicacion</option>
+                            <option value="Bodega 22">Bodega 22</option>
+                            <option value="Sotano 3">Sotano 3</option>
+                            <option value="Bodega 17">Bodega 17</option>
+                            <option value="Bodega 18">Bodega 18</option>
+                            <option value="Bodega Principal">Bodega Principal</option>
+                        </select>
+                    </div>
+
+                    
+                    <div class="form-group">
+                        <label for="idEmpleado">Empleado usuario</label>
+                        <select id="txtidempleado" name="txtidempleado" class="form-control" required>
+                            <option value="">Selecciona un empleado</option>
+                            {% for empleado in empleados %}
+                            <option value="{{ empleado.idDocumentoEmp.primernombre}}">{{ empleado.idDocumentoEmp.primernombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success btn-block text-whith">Guardar</button>
+                    </div>
+              </form>
+            </div>
+        </div>    
+    </div>  
+    <div class="col-md-6">
+        <h2 class="mb-4">Movimientos Inventario</h2>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>No.</th> 
+                       <th>Fecha Inventario</th>
+                       <th>Cant.</th>
+                       <th>Producto</th>
+                       <th>Precio Venta</th>
+                       <th>Descripcion</th>
+                       <th>Categoria</th>
+                       <th>Talla</th>
+                       <th>Tipo Movimiento</th>
+                       <th>Ubicacion</th>
+                       <th>idempleado</th>                       
+                       <th colspan="2">Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in inventarios %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{c.fechainventario}}</td>
+                        <td>{{c.cantidadproductos}}</td>
+                        <td>{{c.idproductoinv.nombreproducto}}</td>
+                        <td>{{c.idproductoinv.precioventa}}</td>
+                        <td>{{c.idproductoinv.descripcionproducto}}</td>
+                        <td>{{c.idproductoinv.idcategoriaproducto.categoriaproducto}}</td>
+                        <td>{{c.idproductoinv.idtalla.talla}}</td>  
+                        <td>{{c.idtipomovimientoinv.tipomovimiento}}</td>
+                        <td>{{c.idubicacioninventarioinv.ubicacioninventario}}</td>
+                        <td>{{c.idEmpleado.idDocumentoEmp}}</td>
+                        <td><a href="{% url 'edicionInventario' idinventario=c.idinventario %}" class="btn btn-info" onclick="return confirm('¿Estás seguro de que quieres editar los campos de este inventario?')">Editar<a/></td>
+                        <td><a href="{% url 'eliminarInventario' idinventario=c.idinventario %}" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar este inventario?')">Eliminar<a/></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            
+            </table>
+            
+        </div>
+    </div> 
+
+
+</div>
+{% endblock %}

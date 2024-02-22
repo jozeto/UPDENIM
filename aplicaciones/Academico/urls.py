@@ -15,15 +15,27 @@ urlpatterns = [
     path('editarCliente/', views.editarCliente),
     path('editarVenta/', views.editarVenta),
     path('registrarCliente/',views.registrarCliente),
+    
+    #---------------------------EXPORTAR E IMPORTAR---------------------------------
     path('contacto/', views.contacto, name='contacto'),
     path('exportar/', views.exportar_a_xls, name='exportar_a_xls'),
     path('exportarClientes/', views.exportar_clientes, name='exportar_clientes'),
     path('importar_excel/', views.importar_excel, name='importar_excel'),
+    
+#-------------------------EMPLEADO-----------------------------------------------------
     path('registrarEmpleado/', views.registrarEmpleado),
     path('edicionEmpleado/<idempleado>', views.edicionEmpleado),
     path('editarEmpleado/<int:idempleado>/', views.editarEmpleado, name='editarEmpleado'),
     path('eliminarEmpleado/<idempleado>', views.eliminarEmpleado),
     path('personal/', views.personal, name ='personal'),
+    
+    
+#---------------------------------INVENTARIO-----------------------
+    path('registrarInventario/', views.vistaInventario),
+    path('edicionInventario/<idinventario>', views.edicionInventario, name='edicionInventario'),
+    path('editarInventario/<int:idinventario>/', views.editarInventario, name='editarInventario'),
+    path('eliminarInventario/<idinventario>', views.eliminarInventario, name='eliminarInventario'),
+
     
  
   
