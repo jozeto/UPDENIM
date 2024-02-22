@@ -38,8 +38,8 @@
                     <select id="txtEmpleados" name="txtEmpleados" class="form-control" required>
                         
                         <option value="">Seleccione un Empleado</option>
-                        {% for empleado in empleado %}
-                            <option value="{{ empleado.idEmpleado }}">{{ empleado.idEmpleado }}</option>
+                        {% for empleado in empleados %}
+                            <option value="{{ empleado.idDocumentoEmp }}">{{ empleado.idDocumentoEmp.primernombre }}</option>
                         {% endfor %}
                     </select>
 
@@ -48,13 +48,19 @@
                         
                         <option value="">Seleccione un Cliente</option>
                         {% for cliente in cliente %}
-                            <option value="{{ cliente.idCliente }}">{{ cliente.idDocumentoCli }}</option>
+                            <option value="{{ cliente.idCliente }}">{{ cliente.idCliente }}</option>
                         {% endfor %}
                     </select>
                    
+                    
                     <div class="form-group">
-                        <h6>Id Producto</h6>
-                        <input type="text" id="txtProducto" name="txtProducto"  class="form-control" placeholder="ID Producto" minlength="1" maxlength="58" required>
+                        <label for="nombreproducto">Nombre producto</label>
+                        <select id="txtProducto" name="txtProducto" class="form-control" required>
+                            <option value="">Selecciona un producto</option>
+                            {% for producto in productos %}
+                            <option value="{{ producto.idproducto.nombreproducto }}">{{ producto.nombreproducto }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     
                     <div class="form-group">

@@ -100,7 +100,7 @@
                         <select id="txtidempleado" name="txtidempleado" class="form-control" required>
                             <option value="">Selecciona un empleado</option>
                             {% for empleado in empleados %}
-                            <option value="{{ empleado.idDocumentoEmp.primernombre}}">{{ empleado.idDocumentoEmp.primernombre }}</option>
+                            <option value="{{ empleado.idEmpleado}}">{{ empleado.idEmpleado }}</option>
                             {% endfor %}
                         </select>
                     </div>

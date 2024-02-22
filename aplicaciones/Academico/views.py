@@ -26,8 +26,28 @@ def vistaVentas(request):
     cliente = Cliente.objects.all()
     vistaVentas = Ventas.objects.all()
     empleado = Empleado.objects.all()
+    inventarios=Inventario.objects.all()
+    productos = Producto.objects.all()
+    empleado = Empleado.objects.all()
+    categoriaproductos=Categoriaproducto.objects.all()
+    tallas=Talla.objects.all()
+    inventarios=Inventario.objects.all()
+    tiposmovimientosint=Tipomovimiento.objects.all()
+    ubicacionesinventario=Ubicacioninventario.objects.all()
+    context = {
+            "productos": productos,
+            "categoriaproductos": categoriaproductos,
+            "tallas": tallas,
+            "inventarios": inventarios,
+            "tiposmovimientosint": tiposmovimientosint,
+            "ubicacionesinventario": ubicacionesinventario,
+            "empleados": empleado,
+            "cliente": cliente,
+            "ventas": vistaVentas
+    }
+        
+    return render(request, "gestionventas.html", context)
     
-    return render(request, "gestionVentas.html", {"cliente": cliente, "ventas": vistaVentas, "empleado": empleado} )
 
 @login_required
 def home(request):
@@ -44,27 +64,48 @@ def registrarVenta(request):
         precioProducto = request.POST.get('txtPrecio')
         TotalVenta = request.POST.get('txtVenta')
         
-        idCliente = request.POST.get('txtClientela') 
+        idCliente = int(request.POST.get('txtClientela'))
         cliente = get_object_or_404(Cliente, pk=idCliente)
+
         
         idEmpleado = request.POST.get('txtEmpleados')
         empleado = get_object_or_404(Empleado, pk=idEmpleado)
         
         
+        
         try:
-            venta = Ventas.objects.create(idVenta=idVenta, idEmpleado=empleado, idCliente=cliente,
-                                           idProducto=idProducto, cantidadProductos=cantidadProductos, 
-                                           descuentoVenta=descuentoVenta, precioProducto=precioProducto, 
-                                           TotalVenta=TotalVenta)
+            venta = Ventas.objects.create(idEmpleado=empleado, idCliente=cliente,
+                                   idProducto=idProducto, cantidadProductos=cantidadProductos, 
+                                   descuentoVenta=descuentoVenta, precioProducto=precioProducto, 
+                                   TotalVenta=TotalVenta)
             messages.success(request, '¡Venta registrada!')
         except Exception as e:
             messages.error(request, f'Error al registrar la venta: {str(e)}')
 
-    eliminarVentass = Ventas.objects.all()
     cliente = Cliente.objects.all()
+    vistaVentas = Ventas.objects.all()
     empleado = Empleado.objects.all()
-    return render(request, "gestionVentas.html", {"ventas": eliminarVentass, "cliente": cliente, "empleado": empleado} )
-
+    inventarios=Inventario.objects.all()
+    productos = Producto.objects.all()
+    empleado = Empleado.objects.all()
+    categoriaproductos=Categoriaproducto.objects.all()
+    tallas=Talla.objects.all()
+    inventarios=Inventario.objects.all()
+    tiposmovimientosint=Tipomovimiento.objects.all()
+    ubicacionesinventario=Ubicacioninventario.objects.all()
+    context = {
+            "productos": productos,
+            "categoriaproductos": categoriaproductos,
+            "tallas": tallas,
+            "inventarios": inventarios,
+            "tiposmovimientosint": tiposmovimientosint,
+            "ubicacionesinventario": ubicacionesinventario,
+            "empleados": empleado,
+            "cliente": cliente,
+            "ventas": vistaVentas
+    }
+        
+    return render(request, "gestionventas.html", context)
 
 @login_required
 def eliminarVenta(request, idVenta):
@@ -437,7 +478,7 @@ def eliminarEmpleado(request, idempleado):
 
 
 # -------------------------------------INVENTARIO---------------------------------------
-def home(request):
+def inventarioss(request):
     inventarios=Inventario.objects.all()
     productos = Producto.objects.all()
     empleado = Empleado.objects.all()
@@ -460,17 +501,22 @@ def home(request):
 
 def vistaInventario(request):
 
-    # Obtener todos los productos, empleados e inventarios
-    productos = Producto.objects.all()
-    empleados = Empleado.objects.all()
-    inventarios = Inventario.objects.all()
-    
-    # Renderizar la plantilla con los datos obtenidos
-    return render(request, "gestionInventario.html", {
-        "productos": productos,
-        "empleados": empleados,
-        "inventarios": inventarios
-    })
+    if request.method == "GET":
+        # Obtener todos los productos, empleados e inventarios
+        productos = Producto.objects.all()
+        empleados = Empleado.objects.all()
+        inventarios = Inventario.objects.all()
+        
+        # Renderizar la plantilla con los datos obtenidos
+        return render(request, "gestionInventario.html", {
+            "productos": productos,
+            "empleados": empleados,
+            "inventarios": inventarios
+        })
+    else:
+        return registrarInventario(request)
+        
+        
 
 
 def registrarInventario(request):
@@ -511,9 +557,28 @@ def registrarInventario(request):
         # Crear el inventario
         inventario = Inventario.objects.create(fechainventario=fechainventario, cantidadproductos=cantidadproductos, idproductoinv=producto,
                                        idtipomovimientoinv=tipomovimiento_obj, idEmpleado=empleado, idubicacioninventarioinv=ubicacioninventario)
+        
 
-        return render(request, "gestionInventario.html")
- 
+        inventarios=Inventario.objects.all()
+        productos = Producto.objects.all()
+        empleado = Empleado.objects.all()
+        categoriaproductos=Categoriaproducto.objects.all()
+        tallas=Talla.objects.all()
+        inventarios=Inventario.objects.all()
+        tiposmovimientosint=Tipomovimiento.objects.all()
+        ubicacionesinventario=Ubicacioninventario.objects.all()
+        context = {
+            "productos": productos,
+            "categoriaproductos": categoriaproductos,
+            "tallas": tallas,
+            "inventarios": inventarios,
+            "tiposmovimientosint": tiposmovimientosint,
+            "ubicacionesinventario": ubicacionesinventario,
+            "empleados": empleado
+        }
+        
+        return render(request, "gestionInventario.html", context)
+    
 
 def edicionInventario(request, idinventario):
     inventario=Inventario.objects.get(idinventario=idinventario)
