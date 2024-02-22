@@ -4,18 +4,34 @@ body {
     font-weight: 400;
     font-size: 16px;
     line-height: 30px;
-    background-color: #0c0f15;
+    background-color: #eceef3;
     overflow-x:hidden;
-    color: #ababab; }
-  
+    color: #f2eded; 
+    background-image: url(https://st.depositphotos.com/1001063/4828/i/450/depositphotos_48288711-stock-photo-fabric-dark-background.jpg);
+}
   ::-webkit-scrollbar {
       width: 10px;
       background-color: #F5F5F5;
     
   }
+
+  .full-screen-image {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+  .container {
+    height: 100vh; /* Altura del 100% de la ventana gráfica */
+}
   
   ::-webkit-scrollbar-thumb {
-      background-color: #f90a23;
+      background-color: #390409;
       background-image: -webkit-linear-gradient(45deg,rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
   }
   
@@ -59,7 +75,7 @@ body {
    * Selection color
    */
   ::-moz-selection {
-    background-color: #FA6862;
+    background-color: #b34441;
     color: #fff; }
   
   ::selection {
@@ -132,15 +148,16 @@ body {
   
   .pt-table {
     display: table;
-    width: 100%;
-    height: -webkit-calc(100vh - 4px);
-    height: -moz-calc(100vh - 4px);
-    height: calc(100vh - 4px); }
+    width: 1000%;
+    height: -webkit-calc(100vh - 400px);
+    height: -moz-calc(1000vh - 400px);
+    height: calc(1000vh - 400px); }
   
-  .pt-tablecell {
-    display: table-cell;
-    vertical-align: middle; }
-  
+    .pt-tablecell {
+      display: table-cell;
+      vertical-align: middle;
+      height: 100vh; /* Ocupa toda la altura de la pantalla */
+  }
   .overlay {
     position: absolute;
     left: 0;
@@ -333,15 +350,8 @@ body {
       margin-left: 0;
   }
   
-  .page-home {
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    vertical-align: middle; }
-    .page-home .overlay {
-      background-color: rgba(14, 17, 24, 0.97);
-      background-image:url("https://images.unsplash.com/photo-1682686581220-689c34afb6ef?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
-  }
+  
+  
   
   /* End of container */
   .hexagon-item {
@@ -380,7 +390,7 @@ body {
           height: 5px; }
       .hexagon-item:hover .hex-item div::before,
       .hexagon-item:hover .hex-item div::after {
-        background-color: #ff0037; }
+        background-color: #4b0816; }
       .hexagon-item:hover .hex-content svg {
         -webkit-transform: scale(0.97);
         -moz-transform: scale(0.97);
@@ -545,7 +555,7 @@ body {
   
   .pt-table.desktop-768 .pt-tablecell {
       padding-bottom: 110px;
-      padding-top: 60px;
+      padding-top: 1000px;
   }
   
   

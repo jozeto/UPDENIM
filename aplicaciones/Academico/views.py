@@ -17,7 +17,6 @@ import xlwt
 import pandas as pd
 from datetime import datetime
 from django.db import transaction
-from django.core.exceptions import MultipleObjectsReturned
 
 
 @login_required
@@ -325,49 +324,52 @@ def personal(request):
     
     return render(request, "novedadesPersonal.html", context)
 
+from django.contrib.auth.models import User
+from django.db import transaction
 
 @transaction.atomic
 def registrarEmpleado(request):
     if request.method == 'POST':
-        ciudad, created = Ciudad.objects.get_or_create(ciudad=request.POST.get('txtciudad'))
+        # Obtener o crear objetos relacionados
+        ciudad, _ = Ciudad.objects.get_or_create(ciudad=request.POST.get('txtciudad'))
         direccion = Direccion.objects.create(direccion=request.POST.get('txtdireccion'), barrio=request.POST.get('txtbarrio'), idciudad=ciudad)
 
-        contacto, created = Contacto.objects.get_or_create(telefono=request.POST.get('txttelefono'), correo=request.POST.get('txtcorreo'))
+        contacto, _ = Contacto.objects.get_or_create(telefono=request.POST.get('txttelefono'), correo=request.POST.get('txtcorreo'))
         genero_nombre = request.POST.get('txtgenero')
-        genero, created = Genero.objects.get_or_create(genero=genero_nombre)
+        genero, _ = Genero.objects.get_or_create(genero=genero_nombre)
 
         cargo_nombre = request.POST.get('txtcargo')
-        cargo, created = CargoEmpleado.objects.get_or_create(cargoEmpleado=cargo_nombre)
+        cargo, _ = CargoEmpleado.objects.get_or_create(cargoEmpleado=cargo_nombre)
 
-        rol, created = Rol.objects.get_or_create(rol=request.POST.get('txtrolus'))
-        eps, created = Eps.objects.get_or_create(eps=request.POST.get('txteps'))
-        arl, created = Arl.objects.get_or_create(arl=request.POST.get('txtarl'))
-        pension, created = Fondopension.objects.get_or_create(fondoPension=request.POST.get('txtpension'))
+        rol, _ = Rol.objects.get_or_create(rol=request.POST.get('txtrolus'))
+        eps, _ = Eps.objects.get_or_create(eps=request.POST.get('txteps'))
+        arl, _ = Arl.objects.get_or_create(arl=request.POST.get('txtarl'))
+        pension, _ = Fondopension.objects.get_or_create(fondoPension=request.POST.get('txtpension'))
 
-        user = User.objects.get(username=request.POST.get('txtuser'))
+        # Obtener o crear usuario
+        usuario = request.POST.get('txtuser')
+        usuario, created = Usuario.objects.get_or_create(usuario=usuario)
+        if created:
+            usuario.password(request.POST.get('txtpassword'))
+            usuario.save()
 
-        persona, created = Persona.objects.get_or_create(iddocumento=request.POST.get('txtdocumento'), primernombre=request.POST.get('txtprimernombre'),
+        # Crear persona y empleado
+        persona, _ = Persona.objects.get_or_create(iddocumento=request.POST.get('txtdocumento'), primernombre=request.POST.get('txtprimernombre'),
                                          segundonombre=request.POST.get('txtsegundonombre'), primerapellido=request.POST.get('txtprimerapellido'),
                                          segundoapellido=request.POST.get('txtsegundoapellido'), idcontacto=contacto, iddireccion=direccion,
                                          idgenero=genero)
 
         empleado = Empleado.objects.create(fechaIngreso=request.POST.get('txtfechaingreso'), fechaNacimiento=request.POST.get('txtfechanacimiento'),
                                     salario=request.POST.get('txtsalario'), rh=request.POST.get('txtrh'), idDocumentoEmp=persona,
-                                    idarl=arl, ideps=eps, idFondoPension=pension, idCargoEmpleado=cargo, iduser=user, idrol=rol)
-
-
-
-
+                                    idarl=arl, ideps=eps, idFondoPension=pension, idCargoEmpleado=cargo, usuario=usuario, idrol=rol)
 
     cargos = CargoEmpleado.objects.all()
     genero = Genero.objects.all()
-    empleados = Empleado,Persona.objects.all()
-    persona = Persona.objects.all()
+    empleados = Empleado.objects.all()
+    personas = Persona.objects.all()
     fondo = Fondopension
 
     return render(request, "novedadesPersonal.html", {"cargos": cargos, "genero": genero, "empleados":empleados, "personas": persona})
-
-
 
 
 

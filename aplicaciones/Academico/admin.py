@@ -2,15 +2,9 @@ from django.contrib import admin
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 from .models import  *
-from django.contrib.auth.models import User
 
-from .models import UsuarioExtendido
 
-admin.site.unregister(User)
 
-@admin.register(UsuarioExtendido)
-class UsuarioExtendidoAdmin(admin.ModelAdmin):
-    list_display = ('usuario', 'rol')
 
 
 admin.site.register(Genero)
@@ -34,7 +28,7 @@ admin.site.register(Ubicacioninventario)
 admin.site.register(Talla)
 admin.site.register(Contacto)
 admin.site.register(Direccion)
-admin.site.register(User)
+admin.site.register(Usuario)
 admin.site.register(Persona)
 admin.site.register(Cliente)
 admin.site.register(Empleado)

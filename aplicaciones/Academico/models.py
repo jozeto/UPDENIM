@@ -1,6 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import User
-
 
 
 
@@ -27,12 +25,10 @@ class Rol(models.Model):
         return f"{self.rol}"
     
     
-class UsuarioExtendido(models.Model):
-    usuario = models.OneToOneField(User, on_delete=models.CASCADE)
-    rol = models.ForeignKey(Rol, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"User ID: {self.usuario.id} - Username: {self.usuario.username}"
+class Usuario(models.Model):
+    iduser = models.AutoField(primary_key=True)
+    usuario = models.CharField(max_length=45, unique=True)
+    password = models.CharField(max_length=10, null=False, blank=False)
 
     
 
@@ -66,19 +62,76 @@ class Fondopension(models.Model):
     fondoPension = models.CharField(max_length=255)
     def __str__(self):
         return self.fondoPension
+    
+class Contacto(models.Model):
+    idcontacto = models.AutoField(primary_key=True)
+    telefono = models.IntegerField(null=False, blank=False)
+    correo = models.CharField(max_length=60)
+
+    def __str__(self):
+        texto = '{0} {1} {2}'
+        return texto.format(self.idcontacto, self.telefono, self.correo)
+    
+class Ciudad(models.Model):
+    idciudad = models.AutoField(primary_key=True)
+    ciudad = models.CharField(max_length=45, blank=False, null=False)
+
+    def __str__(self):
+        texto = '{0} {1}'
+        return texto.format(self.idciudad, self.ciudad)
+
+class Direccion(models.Model):
+    iddireccion = models.AutoField(primary_key=True)
+    direccion = models.CharField(max_length=60, null=False, blank=False)
+    barrio = models.CharField(max_length=45, null=False, blank=False)
+    idciudad = models.ForeignKey(Ciudad, on_delete=models.CASCADE)
+
+    def __str__(self):
+        texto = '{0} {1} {2} {3}'
+        return texto.format(self.iddireccion, self.direccion, self.barrio, self.idciudad,)
+    
+class Genero(models.Model):
+    idgenero = models.AutoField(primary_key=True)
+    genero = models.CharField(max_length=15, null=False, blank=False)
+    
+    def __str__(self):
+        return self.genero
+    
+class Persona(models.Model):
+    iddocumento = models.AutoField(primary_key=True)
+    primernombre = models.CharField(max_length=45, null=False, blank=False)
+    segundonombre = models.CharField(max_length=45, blank=True, null=True)
+    primerapellido = models.CharField(max_length=45, null=False, blank=False)
+    segundoapellido = models.CharField(max_length=45, blank=True, null=True)
+    idcontacto = models.ForeignKey(Contacto, on_delete=models.CASCADE)
+    iddireccion = models.ForeignKey(Direccion, on_delete=models.CASCADE)
+    idgenero = models.ForeignKey(Genero, on_delete=models.CASCADE)
+    
+
+    def __str__(self):
+        texto = '{0}'
+        return texto.format(self.iddocumento)
+    
+        
+class Usuario(models.Model):
+    iduser = models.AutoField(primary_key=True)
+    usuario = models.CharField(max_length=45, unique=True)
+    password = models.CharField(max_length=10, null=False, blank=False)
+    password = models.CharField(max_length=10, null=False, blank=False)
+
 
 class Empleado(models.Model):
     idEmpleado = models.AutoField(primary_key=True)
+    idDocumentoEmp = models.ForeignKey(Persona, on_delete=models.CASCADE)
     fechaIngreso = models.DateField()
     salario = models.FloatField()
     fechaNacimiento = models.DateField()
     rh = models.CharField(max_length=5)
     idarl = models.ForeignKey(Arl, on_delete=models.CASCADE)
     ideps = models.ForeignKey(Eps, on_delete=models.CASCADE)
-    idDocumentoEmp = models.CharField(max_length=150, unique=True)  
     idFondoPension = models.ForeignKey(Fondopension, on_delete=models.CASCADE)
     idCargoEmpleado = models.ForeignKey(CargoEmpleado, on_delete=models.CASCADE)
-    iduser = models.ForeignKey(User, on_delete=models.CASCADE)
+    iduser = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     idrol = models.ForeignKey(Rol, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -99,12 +152,7 @@ class Ventas(models.Model):
     
     
     
-class Genero(models.Model):
-    idgenero = models.AutoField(primary_key=True)
-    genero = models.CharField(max_length=15, null=False, blank=False)
-    
-    def __str__(self):
-        return self.genero
+
     
 
 
@@ -115,13 +163,7 @@ class Categoriaproducto(models.Model):
     idcategoriaproducto = models.AutoField(primary_key=True)
     categoriaproducto = models.CharField(max_length=45, blank=False, null=False)
 
-class Ciudad(models.Model):
-    idciudad = models.AutoField(primary_key=True)
-    ciudad = models.CharField(max_length=45, blank=False, null=False)
 
-    def __str__(self):
-        texto = '{0} {1}'
-        return texto.format(self.idciudad, self.ciudad)
 
 class Tipocliente(models.Model):
     idtipocliente = models.AutoField(primary_key=True)
@@ -167,40 +209,11 @@ class Talla(models.Model):
     idtalla = models.AutoField(primary_key=True)
     talla = models.CharField(max_length=45, null=False, blank=False)
 
-class Contacto(models.Model):
-    idcontacto = models.AutoField(primary_key=True)
-    telefono = models.IntegerField(null=False, blank=False)
-    correo = models.CharField(max_length=60)
-
-    def __str__(self):
-        texto = '{0} {1} {2}'
-        return texto.format(self.idcontacto, self.telefono, self.correo)
-
-class Direccion(models.Model):
-    iddireccion = models.AutoField(primary_key=True)
-    direccion = models.CharField(max_length=60, null=False, blank=False)
-    barrio = models.CharField(max_length=45, null=False, blank=False)
-    idciudad = models.ForeignKey(Ciudad, on_delete=models.CASCADE)
-
-    def __str__(self):
-        texto = '{0} {1} {2} {3}'
-        return texto.format(self.iddireccion, self.direccion, self.barrio, self.idciudad,)
 
 
 
-class Persona(models.Model):
-    iddocumento = models.AutoField(primary_key=True)
-    primernombre = models.CharField(max_length=45, null=False, blank=False)
-    segundonombre = models.CharField(max_length=45, blank=True, null=True)
-    primerapellido = models.CharField(max_length=45, null=False, blank=False)
-    segundoapellido = models.CharField(max_length=45, blank=True, null=True)
-    idcontacto = models.ForeignKey(Contacto, on_delete=models.CASCADE)
-    iddireccion = models.ForeignKey(Direccion, on_delete=models.CASCADE)
-    idgenero = models.ForeignKey(Genero, on_delete=models.CASCADE)
 
-    def __str__(self):
-        texto = '{0}'
-        return texto.format(self.iddocumento)
+
     
 class Producto(models.Model):
     idproducto = models.AutoField(primary_key=True)
