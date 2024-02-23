@@ -4,15 +4,7 @@ from django.db import models
 
 
 
-class Cliente(models.Model):
-    idCliente = models.AutoField(primary_key=True)
-    cupoCredito = models.IntegerField()
-    idDocumentoCli = models.IntegerField()
-    idTipoComercio = models.IntegerField()
-    idTipoCliente = models.IntegerField()
 
-    def __str__(self):
-        return f"{self.idCliente}"
     
     
     
@@ -92,6 +84,7 @@ class Genero(models.Model):
     def __str__(self):
         return self.genero
     
+    
 class Persona(models.Model):
     iddocumento = models.AutoField(primary_key=True)
     primernombre = models.CharField(max_length=45, null=False, blank=False)
@@ -134,6 +127,28 @@ class Empleado(models.Model):
     def __str__(self):
         return f"{self.idEmpleado}"
     
+class Tipocliente(models.Model):
+    idtipocliente = models.AutoField(primary_key=True)
+    tipocliente = models.CharField(max_length=45, null=False, blank=False)
+
+class Tipocomercio(models.Model):
+    idtipocomercio = models.AutoField(primary_key=True)
+    tipocomercio = models.CharField(max_length=45, null=False, blank=False)
+    def __str__(self):
+        return f"{self.tipocomercio}"
+    
+    
+    
+class Cliente(models.Model):
+    idcliente = models.IntegerField(primary_key=True)
+    cupocredito = models.IntegerField()
+    iddocumento = models.ForeignKey(Persona, on_delete=models.CASCADE)
+    idtipocomercio = models.ForeignKey(Tipocomercio, on_delete=models.CASCADE)
+    idtipocliente = models.ForeignKey(Tipocliente,on_delete=models.CASCADE)
+    def __str__(self):
+        return f"{self.iddocumento}" 
+    
+    
 class Ventas(models.Model):
     idVenta = models.AutoField(primary_key=True)
     cantidadProductos = models.CharField(max_length=50)
@@ -148,14 +163,6 @@ class Ventas(models.Model):
         return f"Venta ID: {self.idVenta} - Cantidad Productos: {self.cantidadProductos}"
     
     
-    
-
-    
-
-
-
-
-
 class Categoriaproducto(models.Model):
     idcategoriaproducto = models.AutoField(primary_key=True)
     categoriaproducto = models.CharField(max_length=45, blank=False, null=False)
@@ -164,13 +171,6 @@ class Categoriaproducto(models.Model):
 
 
 
-class Tipocliente(models.Model):
-    idtipocliente = models.AutoField(primary_key=True)
-    tipocliente = models.CharField(max_length=45, null=False, blank=False)
-
-class Tipocomercio(models.Model):
-    idtipocomercio = models.AutoField(primary_key=True)
-    tipocomercio = models.CharField(max_length=45, null=False, blank=False)
 
 class Estadocomprobante(models.Model):
     idestadocomprobante = models.AutoField(primary_key=True)
@@ -285,6 +285,3 @@ class Novedadproducto(models.Model):
         on_delete=models.CASCADE,
         related_name='novedades_producto'  # Cambia 'novedades_producto' a un nombre único
     )
-    idproducto = models.ForeignKey('Producto', on_delete=models.CASCADE)
-    idempleado = models.ForeignKey('Empleado', on_delete=models.CASCADE)
-    idinventario = models.ForeignKey('Inventario', on_delete=models.CASCADE)

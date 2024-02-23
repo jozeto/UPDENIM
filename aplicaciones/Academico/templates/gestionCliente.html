@@ -30,15 +30,18 @@
 
                     
 
-                    <div class="form-group">
-                        <h6>Documento Cliente</h6>
-                        <input type="text" id="txtDocumento" name="txtDocumento" class="form-control" placeholder="Documento Cliente" minlength="1" maxlength="58"  required>
-                    </div>
+                        
+                        <h6>Tipo comercio</h6>
+                        <select id="txtComercio" name="txtComercio" class="form-control" required>
+                            
+                            <option value="">Seleccione un Genero</option>
+                            {% for comercio in comercio %}
+                                <option value="{{ comercio.tipocomercio }}">{{ comercio.tipocomercio }}</option>
+                            {% endfor %}
+                        </select>
 
-                    <div class="form-group">
-                        <h6>Id Comercio</h6>
-                        <input type="text" id="txtComercio" name="txtComercio"  class="form-control" placeholder="Tipo Comercio" minlength="1" maxlength="58"  required>
-                    </div>
+
+                    
 
                     <div class="form-group">
                         <h6>Tipo Cliente</h6>
@@ -49,11 +52,100 @@
                         <h6>Cupos de Credito</h6>
                         <input type="text" id="txtCupo" name="txtCupo" class="form-control" placeholder="Cupos de credito" minlength="1" maxlength="58"  required>
                     </div>
+                    <div class="form-group">
+                        <label for="txtdocumento">Documento Identidad</label>
+                        <input type="text" id="txtdocumento" name="txtdocumento" class="form-control" placeholder="Numero Documento Identidad" 
+                        pattern=".{5,12}" title="El documento debe tener entre 5 y 12 caracteres." minlength="5" maxlength="12" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtprimernombre">Primer Nombre</label>
+                        <input type="text" id="txtprimernombre" name="txtprimernombre" class="form-control" placeholder="Primer Nombre" 
+                            minlength="3" maxlength="25" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtsegundonombre">Segundo Nombre</label>
+                        <input type="text" id="txtsegundonombre" name="txtsegundonombre" class="form-control" placeholder="Segundo Nombre" 
+                            minlength="3" maxlength="25">
+                    </div>
+                    <div class="form-group">
+                        <label for="txtprimerapellido">Primer Apellido</label>
+                        <input type="text" id="txtprimerapellido" name="txtprimerapellido" class="form-control" placeholder="Primer Apellido" 
+                            minlength="3" maxlength="25" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtsegundoapellido">Segundo Apellido</label>
+                        <input type="text" id="txtsegundoapellido" name="txtsegundoapellido" class="form-control" placeholder="Segundo Apellido" 
+                            minlength="3" maxlength="25">
+                    </div>
+                    <div class="form-group">
+                        <label for="txttelefono">Telefono</label>
+                        <input type="text" id="txttelefono" name="txttelefono" class="form-control" placeholder="Telefono de Contacto" 
+                            pattern="[0-9]{8,12}" title="Ingrese un número de teléfono válido (entre 7 y 10 dígitos)."
+                            minlength="7" maxlength="10" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtcorreo">Correo Electronico</label>
+                        <input type="email" id="txtcorreo" name="txtcorreo" class="form-control" placeholder="Correo Electronico" 
+                            minlength="7" maxlength="50" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtciudad">Ciudad</label>
+                        <input type="text" id="txtciudad" name="txtciudad" class="form-control" placeholder="Ciudad" 
+                            minlength="4" maxlength="25" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtdireccion">Direccion</label>
+                        <input type="text" id="txtdireccion" name="txtdireccion" class="form-control" placeholder="Direccion Residencia" 
+                            minlength="8" maxlength="50" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtbarrio">Barrio</label>
+                        <input type="text" id="txtbarrio" name="txtbarrio" class="form-control" placeholder="Barrio" 
+                            minlength="4" maxlength="25" required>
+                    </div>
+                    
+
+                    
+
+
+
+                        <h6>Genero</h6>
+                            <select id="txtgenero" name="txtgenero" class="form-control" required>
+                                
+                                <option value="">Seleccione un Genero</option>
+                                {% for genero in genero %}
+                                    <option value="{{ genero.genero }}">{{ genero.genero }}</option>
+                                {% endfor %}
+                            </select>
+
+
+                        <h6>Cargo</h6>
+                    <select id="txtcargo" name="txtcargo" class="form-control" required>
+                        <option value="">Seleccione un Cargo</option>
+                        {% for cargo in cargos %}
+                            <option value="{{ cargo.id }}">{{ cargo }}</option>
+                        {% endfor %}
+                    </select>
+
+
+                    
+
+                    
+                   
+                    
+
+                    
+                    
+                    
+                    
+                    
 
                         <div class="form-group">
                             <button type="submit" class="btn btn-success btn-block text-white">Guardar</button>
-                        </div>  
-                 </form>
+                        </div> 
+                        
+                        
+</form>
 
             </div>
             </div>
@@ -84,10 +176,7 @@
                     <td>{{cliente.cupoCredito}}</td>
                     <td>{{cliente.idDocumentoCli}}</td>
                     <td>{{cliente.idTipoComercio}}</td>
-                    <td><a href="{% url 'edicionCliente' cliente.idCliente %}" class="btn btn-info">Editar</a></td>
-                    <td><a href="{% url 'eliminarCliente' cliente.idCliente %}" class="btn btn-danger btnEliminacion">Eliminar</a></td>
-    
-                    
+                 
                    
                     
                 </tr>    

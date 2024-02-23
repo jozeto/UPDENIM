@@ -18,6 +18,24 @@ import pandas as pd
 from datetime import datetime
 from django.db import transaction
 from django.core.exceptions import MultipleObjectsReturned
+from django.db import transaction
+
+
+def login(request):
+    if request.method == 'POST':
+        usuario = request.POST['usuario']
+        password = request.POST['password']
+        try:
+            usuario = Usuario.objects.get(usuario=usuario, password=password)
+            # Autenticación exitosa, redirigir a la página de inicio
+            # Guardar el usuario en la sesión
+            request.session['usuario_id'] = usuario.id
+            return redirect('pagina_de_inicio')
+        except Usuario.DoesNotExist:
+            # Usuario no encontrado, mostrar un mensaje de error
+            mensaje = 'Usuario o contraseña incorrectos.'
+            return render(request, 'login.html', {'mensaje': mensaje})
+    return render(request, 'login.html')
 
 
 @login_required
@@ -28,6 +46,20 @@ def vistaVentas(request):
     empleado = Empleado.objects.all()
     inventarios=Inventario.objects.all()
     productos = Producto.objects.all()
+    productoos=[]
+    for producto in productos:
+        inventary= Inventario.objects.filter(idproductoinv=producto.idproducto).values_list()
+        print(inventary.)
+        #primer = inventary.first()
+        #valor = primer.Inventario
+        #print(valor)
+        #print(inventary)
+        #datos = get_object_or_404(Inventario, pk=inventary.().inventario)
+        #print("holaa", datos)
+        productoos.append((producto.idproducto, inventary))
+        
+    
+        
     empleado = Empleado.objects.all()
     categoriaproductos=Categoriaproducto.objects.all()
     tallas=Talla.objects.all()
@@ -35,7 +67,7 @@ def vistaVentas(request):
     tiposmovimientosint=Tipomovimiento.objects.all()
     ubicacionesinventario=Ubicacioninventario.objects.all()
     context = {
-            "productos": productos,
+            "productos": productoos,
             "categoriaproductos": categoriaproductos,
             "tallas": tallas,
             "inventarios": inventarios,
@@ -199,32 +231,81 @@ def editarVenta(request):
 
 @login_required
 def vistaCliente(request): 
-    Clientesss = Cliente.objects.all()
-    if not request.user.is_staff:
-        # Redirigir a otra página o mostrar un mensaje de error
-        return render(request,"home.html")
+    cliente = Cliente.objects.all()
+    persona = Persona.objects.all()
+    empleados = Empleado.objects.all()
+    cargos = CargoEmpleado.objects.all()
+    arls=Arl.objects.all()
+    pension=Fondopension.objects.all()
+    users=User.objects.all()
+    rols=Rol.objects.all()
+    genero=Genero.objects.all()
+    comercio=Tipocomercio.objects.all()
+    context = {
+        "empleados": empleados,
+        "cargos": cargos,
+        "arls": arls,
+        "pension": pension,
+        "users": users,
+        "rols": rols,
+        "persona": persona,
+        "cliente": cliente,
+        "genero": genero,
+        "comercio":comercio,
+        
+    }
     
-    return render(request, "gestionCliente.html", {"cliente": Clientesss})
+    return render(request, "gestionCliente.html", context)
+    
+    
 
+from django.db import transaction
 
 @login_required
 def registrarCliente(request):
-    idCliente = request.POST.get('idCliente', None)
-
-   
-    cupoCredito = request.POST['txtCupo']
-    idDocumentoCli = request.POST['txtDocumento']
-    idTipoComercio = request.POST['txtComercio']
-    idTipoCliente = request.POST['txtTipo']
-    
-    
-    cliente = Cliente.objects.create(idCliente=idCliente,cupoCredito=cupoCredito, idDocumentoCli=idDocumentoCli,
-                                  idTipoComercio=idTipoComercio, idTipoCliente=idTipoCliente)
     Clientesss = Cliente.objects.all()
-    messages.success(request, '¡Cliente registrado!')
-    
-    return render(request, "gestionCliente.html", {"cliente": Clientesss})
+    persona = Persona.objects.all()
 
+    if request.method == 'POST':
+        idCliente = request.POST.get('idCliente', None)
+        cupoCredito = request.POST.get('txtCupo', None)
+        iddocumento = request.POST.get('txtDocumento', None)
+        idTipoComercio = request.POST.get('txtComercio', None)
+        idTipoCliente = request.POST.get('txtTipo', None)
+
+        if cupoCredito and iddocumento and idTipoComercio and idTipoCliente:
+            try:
+                with transaction.atomic():
+                    ciudad, _ = Ciudad.objects.get_or_create(ciudad=request.POST.get('txtciudad'))
+                    direccion = Direccion.objects.create(direccion=request.POST.get('txtdireccion'), barrio=request.POST.get('txtbarrio'), idciudad=ciudad)
+
+                    contacto, _ = Contacto.objects.get_or_create(telefono=request.POST.get('txttelefono'), correo=request.POST.get('txtcorreo'))
+                    genero_nombre = request.POST.get('txtgenero')
+                    genero, _ = Genero.objects.get_or_create(genero=genero_nombre)
+
+                    cargo_nombre = request.POST.get('txtcargo')
+                    cargo, _ = CargoEmpleado.objects.get_or_create(cargoEmpleado=cargo_nombre)
+
+                    usuario_nombre = request.POST.get('txtuser')
+                    password = request.POST.get('txtpassword')
+                    usuario, _ = Usuario.objects.get_or_create(usuario=usuario_nombre, password=password)
+
+                    persona, _ = Persona.objects.get_or_create(iddocumento=request.POST.get('txtdocumento'), primernombre=request.POST.get('txtprimernombre'),
+                                                         segundonombre=request.POST.get('txtsegundonombre'), primerapellido=request.POST.get('txtprimerapellido'),
+                                                         segundoapellido=request.POST.get('txtsegundoapellido'), idcontacto=contacto, iddireccion=direccion,
+                                                         idgenero=genero)
+
+                    cliente = Cliente.objects.create(idCliente=idCliente,cupoCredito=cupoCredito, iddocumento=iddocumento,
+                                                  idTipoComercio=idTipoComercio, idTipoCliente=idTipoCliente,idCargoEmpleado=cargo, iduser=usuario)
+                    
+                    messages.success(request, '¡Cliente registrado!')
+
+            except Exception as e:
+                messages.error(request, f'Error al registrar el cliente: {str(e)}')
+        else:
+            messages.error(request, 'Faltan datos para registrar el cliente.')
+
+    return render(request, "gestionCliente.html", {"cliente": Clientesss, "persona": persona})
 
 
 
@@ -347,7 +428,7 @@ def importar_excel(request):
 
 
 
-# Lo que hizo el mario.
+# Lo que hizo el mario.----------------------REGISTRAR EMPLEADO----------------------------------------------------------
 def personal(request):
     empleados = Empleado.objects.all()
     cargos = CargoEmpleado.objects.all()
