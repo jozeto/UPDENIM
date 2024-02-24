@@ -57,8 +57,8 @@
                         <label for="nombreproducto">Nombre producto</label>
                         <select id="txtProducto" name="txtProducto" class="form-control" required>
                             <option value="">Selecciona un producto</option>
-                            {% for producto in productos %}
-                            <option value="{{ productos.idproducto }}">{{ producto.idproducto }}</option>
+                            {% for inventario in inventario %}
+                            <option value="{{ inventario.idinventario }}">{{ inventario.idproductoinv.nombreproducto }} cantidad productos:{{ inventario.cantidadproductos }}</option>
                             {% endfor %}
                         </select>
                     </div>

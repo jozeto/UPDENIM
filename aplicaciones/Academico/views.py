@@ -46,17 +46,7 @@ def vistaVentas(request):
     empleado = Empleado.objects.all()
     inventarios=Inventario.objects.all()
     productos = Producto.objects.all()
-    productoos=[]
-    for producto in productos:
-        inventary= Inventario.objects.filter(idproductoinv=producto.idproducto).values_list()
-        print(inventary.)
-        #primer = inventary.first()
-        #valor = primer.Inventario
-        #print(valor)
-        #print(inventary)
-        #datos = get_object_or_404(Inventario, pk=inventary.().inventario)
-        #print("holaa", datos)
-        productoos.append((producto.idproducto, inventary))
+    
         
     
         
@@ -66,8 +56,9 @@ def vistaVentas(request):
     inventarios=Inventario.objects.all()
     tiposmovimientosint=Tipomovimiento.objects.all()
     ubicacionesinventario=Ubicacioninventario.objects.all()
+    inventario = Inventario.objects.all()
     context = {
-            "productos": productoos,
+            "productos": productos,
             "categoriaproductos": categoriaproductos,
             "tallas": tallas,
             "inventarios": inventarios,
@@ -75,11 +66,16 @@ def vistaVentas(request):
             "ubicacionesinventario": ubicacionesinventario,
             "empleados": empleado,
             "cliente": cliente,
-            "ventas": vistaVentas
+            "ventas": vistaVentas,
+            "inventario":inventario
     }
         
     return render(request, "gestionventas.html", context)
     
+
+    return render(request, "gestionventas.html", context)
+
+
 
 @login_required
 def home(request):

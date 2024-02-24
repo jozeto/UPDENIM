@@ -127,6 +127,8 @@ class Empleado(models.Model):
     def __str__(self):
         return f"{self.idEmpleado}"
     
+    
+    
 class Tipocliente(models.Model):
     idtipocliente = models.AutoField(primary_key=True)
     tipocliente = models.CharField(max_length=45, null=False, blank=False)
@@ -266,7 +268,12 @@ class Inventario(models.Model):
     idEmpleado = models.ForeignKey(Empleado, on_delete=models.CASCADE)  # Field name made lowercase.
     idubicacioninventarioinv = models.ForeignKey(Ubicacioninventario, on_delete=models.CASCADE)  # Field name made lowercase.
     def __str__(self):
-        return f"{self.idinventario}"
+        texto = '{0} {1}'
+        return f":{self.cantidadproductos} - Cantidad Productos {self.idproductoinv.nombreproducto}"
+    
+   
+    
+    
 
 class Comprobanteventa(models.Model):
     idcomprobanteventa = models.AutoField(primary_key=True)  # Field name made lowercase.
