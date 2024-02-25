@@ -73,7 +73,6 @@ def vistaVentas(request):
     return render(request, "gestionventas.html", context)
     
 
-    return render(request, "gestionventas.html", context)
 
 
 
@@ -84,21 +83,16 @@ def home(request):
 @login_required
 def registrarVenta(request):
     if request.method == 'POST':
-        idVenta = request.POST.get('txtIdVenturas')
-        
+        idVenta = request.POST.get('txtIdVenturas')        
         idProducto = request.POST.get('txtProducto')
         cantidadProductos = request.POST.get('txtNombre')
         descuentoVenta = request.POST.get('txtCategoria')
         precioProducto = request.POST.get('txtPrecio')
-        TotalVenta = request.POST.get('txtVenta')
-        
+        TotalVenta = request.POST.get('txtVenta')        
         idCliente = int(request.POST.get('txtClientela'))
-        cliente = get_object_or_404(Cliente, pk=idCliente)
-
-        
+        cliente = get_object_or_404(Cliente, pk=idCliente)        
         idEmpleado = request.POST.get('txtEmpleados')
         empleado = get_object_or_404(Empleado, pk=idEmpleado)
-        
         
         
         try:
@@ -106,6 +100,12 @@ def registrarVenta(request):
                                    idProducto=idProducto, cantidadProductos=cantidadProductos, 
                                    descuentoVenta=descuentoVenta, precioProducto=precioProducto, 
                                    TotalVenta=TotalVenta)
+            
+            producto_inventario = Inventario.objects.get(idproductoinv=idProducto)
+            cantidad_vendida = int(cantidadProductos)
+            producto_inventario.cantidadproductos -= cantidad_vendida
+            producto_inventario.save()
+
             messages.success(request, '¡Venta registrada!')
         except Exception as e:
             messages.error(request, f'Error al registrar la venta: {str(e)}')
@@ -113,14 +113,15 @@ def registrarVenta(request):
     cliente = Cliente.objects.all()
     vistaVentas = Ventas.objects.all()
     empleado = Empleado.objects.all()
-    inventarios=Inventario.objects.all()
+    inventarios = Inventario.objects.all()
     productos = Producto.objects.all()
     empleado = Empleado.objects.all()
-    categoriaproductos=Categoriaproducto.objects.all()
-    tallas=Talla.objects.all()
-    inventarios=Inventario.objects.all()
-    tiposmovimientosint=Tipomovimiento.objects.all()
-    ubicacionesinventario=Ubicacioninventario.objects.all()
+    categoriaproductos = Categoriaproducto.objects.all()
+    tallas = Talla.objects.all()
+    inventarios = Inventario.objects.all()
+    tiposmovimientosint = Tipomovimiento.objects.all()
+    ubicacionesinventario = Ubicacioninventario.objects.all()
+    
     context = {
             "productos": productos,
             "categoriaproductos": categoriaproductos,
