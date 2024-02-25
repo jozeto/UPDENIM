@@ -45,11 +45,7 @@ def vistaVentas(request):
     vistaVentas = Ventas.objects.all()
     empleado = Empleado.objects.all()
     inventarios=Inventario.objects.all()
-    productos = Producto.objects.all()
-    
-        
-    
-        
+    productos = Producto.objects.all() 
     empleado = Empleado.objects.all()
     categoriaproductos=Categoriaproducto.objects.all()
     tallas=Talla.objects.all()
@@ -83,58 +79,67 @@ def home(request):
 @login_required
 def registrarVenta(request):
     if request.method == 'POST':
-        idVenta = request.POST.get('txtIdVenturas')        
-        idProducto = request.POST.get('txtProducto')
-        cantidadProductos = request.POST.get('txtNombre')
-        descuentoVenta = request.POST.get('txtCategoria')
-        precioProducto = request.POST.get('txtPrecio')
-        TotalVenta = request.POST.get('txtVenta')        
-        idCliente = int(request.POST.get('txtClientela'))
-        cliente = get_object_or_404(Cliente, pk=idCliente)        
-        idEmpleado = request.POST.get('txtEmpleados')
-        empleado = get_object_or_404(Empleado, pk=idEmpleado)
-        
-        
         try:
-            venta = Ventas.objects.create(idEmpleado=empleado, idCliente=cliente,
-                                   idProducto=idProducto, cantidadProductos=cantidadProductos, 
-                                   descuentoVenta=descuentoVenta, precioProducto=precioProducto, 
-                                   TotalVenta=TotalVenta)
-            
-            producto_inventario = Inventario.objects.get(idproductoinv=idProducto)
-            cantidad_vendida = int(cantidadProductos)
-            producto_inventario.cantidadproductos -= cantidad_vendida
+            # Obtener los datos del formulario
+            idProducto = request.POST.get('txtProducto')
+            cantidadProductos = int(request.POST.get('txtNombre'))
+            descuentoVenta = float(request.POST.get('txtCategoria'))
+            precioProducto = float(request.POST.get('txtPrecio'))
+            TotalVenta = float(request.POST.get('txtVenta'))
+            idCliente = int(request.POST.get('txtClientela'))
+            idEmpleado = int(request.POST.get('txtEmpleados'))
+
+            # Verificar la existencia del cliente y empleado
+            cliente = get_object_or_404(Cliente, pk=idCliente)
+            empleado = get_object_or_404(Empleado, pk=idEmpleado)
+
+            # Crear la instancia de la venta
+            venta = Ventas.objects.create(
+                idEmpleado=empleado,
+                idCliente=cliente,
+                idProducto=idProducto,
+                cantidadProductos=cantidadProductos,
+                descuentoVenta=descuentoVenta,
+                precioProducto=precioProducto,
+                TotalVenta=TotalVenta
+            )
+
+            # Actualizar el inventario
+            producto_inventario = get_object_or_404(Inventario, idproductoinv=idProducto)
+            producto_inventario.cantidadproductos -= cantidadProductos
             producto_inventario.save()
 
-            messages.success(request, '¡Venta registrada!')
+            messages.success(request, '¡Venta registrada exitosamente!')
         except Exception as e:
             messages.error(request, f'Error al registrar la venta: {str(e)}')
 
+    # Obtener datos necesarios para renderizar la página
     cliente = Cliente.objects.all()
-    vistaVentas = Ventas.objects.all()
     empleado = Empleado.objects.all()
-    inventarios = Inventario.objects.all()
     productos = Producto.objects.all()
-    empleado = Empleado.objects.all()
     categoriaproductos = Categoriaproducto.objects.all()
     tallas = Talla.objects.all()
-    inventarios = Inventario.objects.all()
     tiposmovimientosint = Tipomovimiento.objects.all()
     ubicacionesinventario = Ubicacioninventario.objects.all()
-    
+    vistaVentas = Ventas.objects.all()
+
     context = {
-            "productos": productos,
-            "categoriaproductos": categoriaproductos,
-            "tallas": tallas,
-            "inventarios": inventarios,
-            "tiposmovimientosint": tiposmovimientosint,
-            "ubicacionesinventario": ubicacionesinventario,
-            "empleados": empleado,
-            "cliente": cliente,
-            "ventas": vistaVentas
+        "productos": productos,
+        "categoriaproductos": categoriaproductos,
+        "tallas": tallas,
+        "tiposmovimientosint": tiposmovimientosint,
+        "ubicacionesinventario": ubicacionesinventario,
+        "empleados": empleado,
+        "cliente": cliente,
+        "ventas": vistaVentas
     }
-        
+
     return render(request, "gestionventas.html", context)
+
+
+
+
+
 
 @login_required
 def eliminarVenta(request, idVenta):
