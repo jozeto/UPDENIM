@@ -603,6 +603,16 @@ def vistaInventario(request):
 
 
 def registrarInventario(request):
+    """
+    Registra un nuevo inventario en el sistema.
+
+    Args:
+        request: Objeto HttpRequest que contiene la información de la solicitud.
+
+    Retorno:
+        HttpResponse con la vista de gestión de inventario.
+    """
+
     if request.method == 'POST':
         # Obtener datos del formulario
         fechainventario = request.POST.get('txtfechainventario')
@@ -616,11 +626,52 @@ def registrarInventario(request):
         ubicacioninventario = request.POST.get('txtubicacioninventario')
         idEmpleado = request.POST.get('txtidempleado')
 
+        # Validar datos
+        errores = {}
+        if not fechainventario:
+            errores['txtfechainventario'] = 'La fecha es obligatoria.'
+        if not cantidadproductos:
+            errores['txtcantidadproductos'] = 'La cantidad es obligatoria.'
+        if not nombreproducto:
+            errores['txtnombreproducto'] = 'El nombre del producto es obligatorio.'
+        if not precioventa:
+            errores['txtprecioventa'] = 'El precio de venta es obligatorio.'
+        if not categoriaproducto:
+            errores['txtcategoriaproducto'] = 'La categoría del producto es obligatoria.'
+        if not talla:
+            errores['txttalla'] = 'La talla del producto es obligatoria.'
+        if not tipomovimiento:
+            errores['txttipomovimiento'] = 'El tipo de movimiento es obligatorio.'
+        if not ubicacioninventario:
+            errores['txtubicacioninventario'] = 'La ubicación del inventario es obligatoria.'
+        if not idEmpleado:
+            errores['txtidempleado'] = 'El ID del empleado es obligatorio.'
+
+        if errores:
+            # Mostrar errores en la vista
+            context = {'errores': errores}
+            return render(request, "gestionInventario.html", context)
+
         # Obtener o crear objetos relacionados
-        categoria, created = Categoriaproducto.objects.get_or_create(categoriaproducto=categoriaproducto)
-        talla, created = Talla.objects.get_or_create(talla=talla)
-        ubicacioninventario, created = Ubicacioninventario.objects.get_or_create(ubicacioninventario=ubicacioninventario)
-        empleado, created = Empleado.objects.get_or_create(idEmpleado=idEmpleado)
+        try:
+            categoria = Categoriaproducto.objects.get(categoriaproducto=categoriaproducto)
+        except Categoriaproducto.DoesNotExist:
+            categoria = Categoriaproducto.objects.create(categoriaproducto=categoriaproducto)
+
+        try:
+            talla = Talla.objects.get(talla=talla)
+        except Talla.DoesNotExist:
+            talla = Talla.objects.create(talla=talla)
+
+        try:
+            ubicacioninventario = Ubicacioninventario.objects.get(ubicacioninventario=ubicacioninventario)
+        except Ubicacioninventario.DoesNotExist:
+            ubicacioninventario = Ubicacioninventario.objects.create(ubicacioninventario=ubicacioninventario)
+
+        try:
+            empleado = Empleado.objects.get(idEmpleado=idEmpleado)
+        except Empleado.DoesNotExist:
+            empleado = Empleado.objects.create(idEmpleado=idEmpleado)
 
         try:
             # Intenta recuperar el Tipomovimiento
@@ -634,22 +685,26 @@ def registrarInventario(request):
             tipomovimiento_obj = Tipomovimiento.objects.filter(tipomovimiento=tipomovimiento).first()
 
         # Crear el producto
-        producto, created = Producto.objects.get_or_create(nombreproducto=nombreproducto, precioventa=precioventa, descripcionproducto=descripcionproducto,
-                                       idcategoriaproducto=categoria, idtalla=talla)
+        producto, created = Producto.objects.get_or_create(nombreproducto=nombreproducto, precioventa=precioventa, 
+                                       descripcionproducto=descripcionproducto, idcategoriaproducto=categoria, idtalla=talla)
 
         # Crear el inventario
-        inventario = Inventario.objects.create(fechainventario=fechainventario, cantidadproductos=cantidadproductos, idproductoinv=producto,
-                                       idtipomovimientoinv=tipomovimiento_obj, idEmpleado=empleado, idubicacioninventarioinv=ubicacioninventario)
-        
+        inventario = Inventario.objects.create(fechainventario=fechainventario, cantidadproductos=cantidadproductos, 
+                                       idproductoinv=producto, idtipomovimientoinv=tipomovimiento_obj, idEmpleado=empleado, 
+                                       idubicacioninventarioinv=ubicacioninventario)
 
-        inventarios=Inventario.objects.all()
+        # Mostrar mensaje de éxito
+        mensajes = {'success': 'Inventario registrado correctamente.'}
+
+        # Obtener datos para la vista
+        inventarios = Inventario.objects.all()
         productos = Producto.objects.all()
         empleado = Empleado.objects.all()
-        categoriaproductos=Categoriaproducto.objects.all()
-        tallas=Talla.objects.all()
-        inventarios=Inventario.objects.all()
-        tiposmovimientosint=Tipomovimiento.objects.all()
-        ubicacionesinventario=Ubicacioninventario.objects.all()
+        categoriaproductos = Categoriaproducto.objects.all()
+        tallas = Talla.objects.all()
+        inventarios = Inventario.objects.all()
+        tiposmovimientosint = Tipomovimiento.objects.all()
+        ubicacionesinventario = Ubicacioninventario.objects.all()
         context = {
             "productos": productos,
             "categoriaproductos": categoriaproductos,
@@ -657,7 +712,8 @@ def registrarInventario(request):
             "inventarios": inventarios,
             "tiposmovimientosint": tiposmovimientosint,
             "ubicacionesinventario": ubicacionesinventario,
-            "empleados": empleado
+            "empleados": empleado,
+            "mensajes": mensajes,
         }
         
         return render(request, "gestionInventario.html", context)
