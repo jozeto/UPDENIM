@@ -9,12 +9,13 @@ urlpatterns = [
     path('gestionVentas/', views.vistaVentas),
     path('registrarVenta/', views.registrarVenta),
     path('eliminarVenta/<int:idVenta>', views.eliminarVenta, name='eliminarVenta'),
-    path('eliminarCliente/<int:idCliente>', views.eliminarCliente, name='eliminarCliente'),
-    path('edicionCliente/<int:idCliente>', views.edicionCliente, name='edicionCliente'),
     path('edicionVenta/<int:idVenta>',views.edicionVenta, name='edicionVenta'),
-    path('editarCliente/', views.editarCliente),
     path('editarVenta/', views.editarVenta),
-    path('registrarCliente/',views.registrarCliente),
+    #-------------------------------CLIENTE----------------------------------------------
+    path('eliminarCliente/<int:idCliente>', views.eliminarCliente, name='eliminarCliente'),
+    path('edicionCliente/<int:idCliente>', views.edicionCliente, name='edicionCliente'), 
+    path('editarCliente/', views.editarCliente),
+    path('registrarCliente/',views.registrarCliente, name='registrarCliente'),
     
     #---------------------------EXPORTAR E IMPORTAR---------------------------------
     path('contacto/', views.contacto, name='contacto'),

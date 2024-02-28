@@ -85,13 +85,15 @@ def registrarVenta(request):
             cantidadProductos = int(request.POST.get('txtNombre'))
             descuentoVenta = float(request.POST.get('txtCategoria'))
             precioProducto = float(request.POST.get('txtPrecio'))
-            TotalVenta = float(request.POST.get('txtVenta'))
             idCliente = int(request.POST.get('txtClientela'))
             idEmpleado = int(request.POST.get('txtEmpleados'))
 
             # Verificar la existencia del cliente y empleado
             cliente = get_object_or_404(Cliente, pk=idCliente)
             empleado = get_object_or_404(Empleado, pk=idEmpleado)
+
+            # Calcular el total de la venta restando el descuento del precio del producto
+            totalVenta = precioProducto * cantidadProductos - descuentoVenta
 
             # Crear la instancia de la venta
             venta = Ventas.objects.create(
@@ -101,7 +103,7 @@ def registrarVenta(request):
                 cantidadProductos=cantidadProductos,
                 descuentoVenta=descuentoVenta,
                 precioProducto=precioProducto,
-                TotalVenta=TotalVenta
+                TotalVenta=totalVenta
             )
 
             # Actualizar el inventario
@@ -122,6 +124,7 @@ def registrarVenta(request):
     tiposmovimientosint = Tipomovimiento.objects.all()
     ubicacionesinventario = Ubicacioninventario.objects.all()
     vistaVentas = Ventas.objects.all()
+    inventario = Inventario.objects.all()
 
     context = {
         "productos": productos,
@@ -131,10 +134,12 @@ def registrarVenta(request):
         "ubicacionesinventario": ubicacionesinventario,
         "empleados": empleado,
         "cliente": cliente,
-        "ventas": vistaVentas
+        "ventas": vistaVentas,
+        "inventario": inventario,
     }
 
     return render(request, "gestionventas.html", context)
+
 
 
 
@@ -164,7 +169,7 @@ def eliminarCliente(request, idCliente):
 @login_required
 def edicionVenta(request, idVenta):
     venta = Ventas.objects.get(idVenta=idVenta)
-    messages.success(request, '¡Venta actualizada!')
+    messages.success(request, '¡Cliente actualizado!')
     return render(request, "edicionVenta.html", {"ventas": venta})
 @login_required
 def edicionCliente(request, idCliente):
@@ -243,6 +248,7 @@ def vistaCliente(request):
     rols=Rol.objects.all()
     genero=Genero.objects.all()
     comercio=Tipocomercio.objects.all()
+    tipocliente=Tipocliente.objects.all()
     context = {
         "empleados": empleados,
         "cargos": cargos,
@@ -254,6 +260,7 @@ def vistaCliente(request):
         "cliente": cliente,
         "genero": genero,
         "comercio":comercio,
+        "tipocliente":tipocliente,
         
     }
     
@@ -261,54 +268,61 @@ def vistaCliente(request):
     
     
 
-from django.db import transaction
-
 @login_required
 def registrarCliente(request):
     Clientesss = Cliente.objects.all()
     persona = Persona.objects.all()
+    tipos_cliente = Tipocliente.objects.all()  # Obtener todos los tipos de cliente
 
     if request.method == 'POST':
-        idCliente = request.POST.get('idCliente', None)
-        cupoCredito = request.POST.get('txtCupo', None)
-        iddocumento = request.POST.get('txtDocumento', None)
-        idTipoComercio = request.POST.get('txtComercio', None)
-        idTipoCliente = request.POST.get('txtTipo', None)
+        idcliente = request.POST.get('idCliente', None)
+        cupocredito = request.POST.get('txtCupo', None)
+        iddocumento = request.POST.get('txtdocumento', None)
+        idtipocomercio_nombre = request.POST.get('txtComercio', None)
+        idtipocliente_nombre = request.POST.get('txtTipo', None)  # Obtener el nombre del tipo de cliente
 
-        if cupoCredito and iddocumento and idTipoComercio and idTipoCliente:
+        if cupocredito and iddocumento and idtipocomercio_nombre and idtipocliente_nombre:
             try:
                 with transaction.atomic():
+                    # Obtener o crear instancia de Contacto
+                    contacto, _ = Contacto.objects.get_or_create(telefono=request.POST.get('txttelefono'), correo=request.POST.get('txtcorreo'))
+
+                    # Obtener o crear instancia de Ciudad
                     ciudad, _ = Ciudad.objects.get_or_create(ciudad=request.POST.get('txtciudad'))
+
+                    # Crear instancia de Direccion
                     direccion = Direccion.objects.create(direccion=request.POST.get('txtdireccion'), barrio=request.POST.get('txtbarrio'), idciudad=ciudad)
 
-                    contacto, _ = Contacto.objects.get_or_create(telefono=request.POST.get('txttelefono'), correo=request.POST.get('txtcorreo'))
+                    # Obtener o crear instancia de Genero
                     genero_nombre = request.POST.get('txtgenero')
                     genero, _ = Genero.objects.get_or_create(genero=genero_nombre)
 
-                    cargo_nombre = request.POST.get('txtcargo')
-                    cargo, _ = CargoEmpleado.objects.get_or_create(cargoEmpleado=cargo_nombre)
-
-                    usuario_nombre = request.POST.get('txtuser')
-                    password = request.POST.get('txtpassword')
-                    usuario, _ = Usuario.objects.get_or_create(usuario=usuario_nombre, password=password)
-
-                    persona, _ = Persona.objects.get_or_create(iddocumento=request.POST.get('txtdocumento'), primernombre=request.POST.get('txtprimernombre'),
+                    # Obtener la instancia de Persona correspondiente al documento proporcionado
+                    persona_instancia, _ = Persona.objects.get_or_create(iddocumento=iddocumento, primernombre=request.POST.get('txtprimernombre'),
                                                          segundonombre=request.POST.get('txtsegundonombre'), primerapellido=request.POST.get('txtprimerapellido'),
                                                          segundoapellido=request.POST.get('txtsegundoapellido'), idcontacto=contacto, iddireccion=direccion,
                                                          idgenero=genero)
 
-                    cliente = Cliente.objects.create(idCliente=idCliente,cupoCredito=cupoCredito, iddocumento=iddocumento,
-                                                  idTipoComercio=idTipoComercio, idTipoCliente=idTipoCliente,idCargoEmpleado=cargo, iduser=usuario)
+                    # Obtener la instancia de Tipocomercio correspondiente al nombre proporcionado
+                    tipocomercio_instancia = get_object_or_404(Tipocomercio, tipocomercio=idtipocomercio_nombre)
+
+                    # Obtener la instancia de Tipocliente correspondiente al nombre proporcionado
+                    tipocliente_instancia = Tipocliente.objects.get(tipocliente=idtipocliente_nombre)
+
+                    # Crear instancia de Cliente con los argumentos correctos
+                    cliente = Cliente.objects.create(iddocumento=persona_instancia, cupocredito=cupocredito, idtipocomercio=tipocomercio_instancia, idtipocliente=tipocliente_instancia)
                     
                     messages.success(request, '¡Cliente registrado!')
 
-            except Exception as e:
-                messages.error(request, f'Error al registrar el cliente: {str(e)}')
+            except IntegrityError as e:
+                if 'unique constraint' in str(e):
+                    messages.error(request, 'Ya existe un cliente con ese número de documento.')
+                else:
+                    messages.error(request, f'Error al registrar el cliente: {str(e)}')
         else:
             messages.error(request, 'Faltan datos para registrar el cliente.')
 
-    return render(request, "gestionCliente.html", {"cliente": Clientesss, "persona": persona})
-
+    return render(request, "gestionCliente.html", {"cliente": Clientesss, "persona": persona, "tipos_cliente": tipos_cliente})
 
 
 @login_required

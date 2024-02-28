@@ -58,7 +58,7 @@
                         <select id="txtProducto" name="txtProducto" class="form-control" required>
                             <option value="">Selecciona un producto</option>
                             {% for inventario in inventario %}
-                            <option value="{{ inventario.idinventario }}">{{ inventario.idproductoinv.nombreproducto }} cantidad productos:{{ inventario.cantidadproductos }}</option>
+                            <option value="{{ inventario.idinventario }}">{{ inventario.idproductoinv.nombreproducto }} cantidad productos:{{ inventario.cantidadproductos }}, Precio producto: {{ inventario.idproductoinv.precioventa }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -72,10 +72,7 @@
                         <input type="text" id="txtCategoria" name="txtCategoria" class="form-control"  placeholder="Descuento venta" minlength="1" maxlength="58" required>
                     </div>
 
-                    <div class="form-group">
-                        <h6>Total venta</h6>
-                        <input type="text" id="txtVenta" name="txtVenta" class="form-control"  placeholder="Total Venta" minlength="3" maxlength="58" required>
-                    </div>
+                  
 
                     <div class="card">
                         <div class="form-group">
@@ -102,22 +99,34 @@
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>#</th>
-                <th>id</th>
-                <th>Nombre</th>
-                <th>Cantidad</th>
-                <th>Precio</th>
+                
+                <th>id Venta</th>
+                <th>cantidad Productos</th>
+                <th>Descuento Venta</th>
+                <th>Precio Producto</th>
+                <th>Empleado</th>
+                <th>Id Cliente</th>
+                <th>Cantidad Productos</th>
+                <th>Precio Producto</th>
+                <th>Descuento Venta</th>
+                <th>Total Venta</th>
                 <th colspan="2">Opciones</th>
             </tr>
         </thead>
         <tbody>
         {% for v in ventas%}
             <tr>
-                <td>{{forloop.counter}}</td>
+                
                 <td>{{v.idVenta}}</td>
                 <td>{{v.cantidadProductos}}</td>
                 <td>{{v.descuentoVenta}}</td>
                 <td>{{v.precioProducto}}</td>
+                <td>{{v.idEmpleado.idDocumentoEmp.primernombre}}</td>
+                <td>{{v.idCliente}}</td>
+                <td>{{v.cantidadProductos}}</td>
+                <td>{{v.precioProducto}}</td>
+                <td>{{v.descuentoVenta }}</td>
+                <td>{{v.TotalVenta }}</td>
               
                 <td><a href="/edicionVenta/{{v.idVenta}}" class="btn btn-info">Editar</a></td>
                 <td><a href="/eliminarVenta/{{v.idVenta}}" class="btn btn-danger btnEliminacion">Eliminar</a></td>

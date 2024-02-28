@@ -34,19 +34,22 @@
                         <h6>Tipo comercio</h6>
                         <select id="txtComercio" name="txtComercio" class="form-control" required>
                             
-                            <option value="">Seleccione un Genero</option>
+                            <option value="">Seleccione tipo comercio</option>
                             {% for comercio in comercio %}
                                 <option value="{{ comercio.tipocomercio }}">{{ comercio.tipocomercio }}</option>
                             {% endfor %}
                         </select>
 
 
-                    
-
-                    <div class="form-group">
                         <h6>Tipo Cliente</h6>
-                        <input type="text" id="txtTipo" name="txtTipo"  class="form-control" placeholder="Tipo Cliente" minlength="1" maxlength="58" required>
-                    </div>
+                        <select id="txtTipo" name="txtTipo" class="form-control" required>
+                            
+                            <option value="">Seleccione tipo cliente</option>
+                            {% for tipocliente in tipocliente %}
+                                <option value="{{ tipocliente.tipocliente }}">{{ tipocliente.tipocliente }}</option>
+                            {% endfor %}
+                        </select>
+
                     
                     <div class="form-group">
                         <h6>Cupos de Credito</h6>
@@ -119,26 +122,7 @@
                             </select>
 
 
-                        <h6>Cargo</h6>
-                    <select id="txtcargo" name="txtcargo" class="form-control" required>
-                        <option value="">Seleccione un Cargo</option>
-                        {% for cargo in cargos %}
-                            <option value="{{ cargo.id }}">{{ cargo }}</option>
-                        {% endfor %}
-                    </select>
-
-
-                    
-
-                    
-                   
-                    
-
-                    
-                    
-                    
-                    
-                    
+            
 
                         <div class="form-group">
                             <button type="submit" class="btn btn-success btn-block text-white">Guardar</button>
@@ -151,20 +135,26 @@
             </div>
         </div>
     </div>
-<div class="col-sm-12 col-md-6 col-lg-8 col-xl-8">
 
-    <h1> Listado de clientes </h1>       <a href="{% url 'exportar_clientes' %}" class="btn btn-primary">Exportar a XLS</a> 
 
-<div class="table-responsive py-2">
-</div>
-    <table class="table table-striped">
-        <thead>
-            <tr>
+    
+
+    <div class="col-md-8">
+        <h1> Listado de clientes </h1>       <a href="{% url 'exportar_clientes' %}" class="btn btn-primary">Exportar a XLS</a> 
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
                 <th>#</th>
                 <th>id cliente</th>
                 <th>Cupo Credito</th>
                 <th>Documento cliente</th>
                 <th>Tipo Comercio</th>
+                <th>primer nombre</th>
+                <th>Segundo nombre</th>
+                <th>Primer Apellido</th>
+                <th>Correo</th>
+                <th>Telefono</th>
                 <th colspan="2">Opciones</th>
             </tr>
             </thead>
@@ -172,10 +162,19 @@
             {% for cliente in cliente%}
                 <tr>
                     <td>{{forloop.counter}}</td>
-                    <td>{{cliente.idCliente}}</td>
-                    <td>{{cliente.cupoCredito}}</td>
-                    <td>{{cliente.idDocumentoCli}}</td>
-                    <td>{{cliente.idTipoComercio}}</td>
+                    <td>{{cliente.idcliente}}</td>
+                    <td>{{cliente.cupocredito}}</td>
+                    <td>{{cliente.iddocumento}}</td>
+                    <td>{{cliente.idtipocomercio}}</td>
+                    <td>{{cliente.iddocumento.primernombre}}</td>
+                    <td>{{cliente.iddocumento.segundonombre}}</td>
+                    <td>{{cliente.iddocumento.primerapellido}}</td>
+                    <td>{{cliente.iddocumento.idcontacto.correo}}</td>
+                    <td>{{cliente.iddocumento.idcontacto.telefono}}</td>
+                    <td><a href="/editarCliente/{{v.idcliente}}" class="btn btn-info">Editar</a></td>
+                    <td><a href="/eliminarCliente/{{v.idcliente}}" class="btn btn-danger btnEliminacion">Eliminar</a></td>
+
+
                  
                    
                     
@@ -183,6 +182,8 @@
             {% endfor%}
             </tbody>
     </table>
+</div>
+</div>
 </div>
 
 

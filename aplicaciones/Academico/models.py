@@ -86,7 +86,7 @@ class Genero(models.Model):
     
     
 class Persona(models.Model):
-    iddocumento = models.AutoField(primary_key=True)
+    iddocumento = models.CharField(max_length=20, primary_key=True)
     primernombre = models.CharField(max_length=45, null=False, blank=False)
     segundonombre = models.CharField(max_length=45, blank=True, null=True)
     primerapellido = models.CharField(max_length=45, null=False, blank=False)
@@ -131,6 +131,8 @@ class Empleado(models.Model):
 class Tipocliente(models.Model):
     idtipocliente = models.AutoField(primary_key=True)
     tipocliente = models.CharField(max_length=45, null=False, blank=False)
+    def __str__(self):
+        return f"{self.tipocliente}"
 
 class Tipocomercio(models.Model):
     idtipocomercio = models.AutoField(primary_key=True)
@@ -212,6 +214,8 @@ class Ubicacioninventario(models.Model):
 class Talla(models.Model):
     idtalla = models.AutoField(primary_key=True)
     talla = models.CharField(max_length=45, null=False, blank=False)
+    def __str__(self):
+        return f"{self.talla}"
 
 
 
@@ -268,7 +272,7 @@ class Inventario(models.Model):
     idubicacioninventarioinv = models.ForeignKey(Ubicacioninventario, on_delete=models.CASCADE)  # Field name made lowercase.
     def __str__(self):
         texto = '{0} {1}'
-        return f":{self.cantidadproductos} - Cantidad Productos {self.idproductoinv.nombreproducto}"
+        return f":{self.cantidadproductos} - Cantidad Productos {self.idproductoinv.nombreproducto}- Precio Producto {self.idproductoinv.precioventa}"
     
    
     
