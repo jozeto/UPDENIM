@@ -21,6 +21,7 @@ from django.core.exceptions import MultipleObjectsReturned
 from django.db import transaction
 
 
+
 def login(request):
     if request.method == 'POST':
         usuario = request.POST['usuario']
@@ -156,8 +157,8 @@ def eliminarVenta(request, idVenta):
     messages.success(request, '¡Venta eliminada!')
     return render(request, "gestionVentas.html", {"ventas": eliminarVenta})
 @login_required
-def eliminarCliente(request, idCliente):
-    cliente = Cliente.objects.get(idCliente=idCliente)
+def eliminarCliente(request, idcliente):
+    cliente = Cliente.objects.get(idcliente=idcliente)
     Clientesss = Cliente.objects.all()
     cliente.delete()
     messages.success(request, '¡Cliente eliminadao!') 
@@ -169,11 +170,37 @@ def eliminarCliente(request, idCliente):
 @login_required
 def edicionVenta(request, idVenta):
     venta = Ventas.objects.get(idVenta=idVenta)
-    messages.success(request, '¡Cliente actualizado!')
-    return render(request, "edicionVenta.html", {"ventas": venta})
+    
+    cliente = Cliente.objects.all()
+    empleado = Empleado.objects.all()
+    inventarios=Inventario.objects.all()
+    productos = Producto.objects.all() 
+    empleado = Empleado.objects.all()
+    categoriaproductos=Categoriaproducto.objects.all()
+    tallas=Talla.objects.all()
+    inventarios=Inventario.objects.all()
+    tiposmovimientosint=Tipomovimiento.objects.all()
+    ubicacionesinventario=Ubicacioninventario.objects.all()
+    inventario = Inventario.objects.all()
+    context = {
+            "productos": productos,
+            "categoriaproductos": categoriaproductos,
+            "tallas": tallas,
+            "inventarios": inventarios,
+            "tiposmovimientosint": tiposmovimientosint,
+            "ubicacionesinventario": ubicacionesinventario,
+            "empleados": empleado,
+            "cliente": cliente,
+            "ventas": venta,
+            "inventario":inventario
+    
+    }
+        
+    return render(request, "edicionventa.html", context)
+    
 @login_required
-def edicionCliente(request, idCliente):
-    cliente = Cliente.objects.get(idCliente=idCliente)
+def edicionCliente(request, idcliente):
+    cliente = Cliente.objects.get(idcliente=idcliente)
     messages.success(request, '¡Cliente actualizado!')
     return render(request, "edicionCliente.html", {"cliente": cliente})
 @login_required
@@ -231,9 +258,34 @@ def editarVenta(request):
     venta.save()
     
     # Obtener todas las ventas después de la edición
-    eliminarVenta = Ventas.objects.all()
-    
-    return render(request, "gestionVentas.html", {"ventas": eliminarVenta})
+    venta = Ventas.objects.get(idVenta=idVenta)
+    messages.success(request, '¡Venta actualizada!')
+    cliente = Cliente.objects.all()
+    vistaVentas = Ventas.objects.all()
+    empleado = Empleado.objects.all()
+    inventarios=Inventario.objects.all()
+    productos = Producto.objects.all() 
+    empleado = Empleado.objects.all()
+    categoriaproductos=Categoriaproducto.objects.all()
+    tallas=Talla.objects.all()
+    inventarios=Inventario.objects.all()
+    tiposmovimientosint=Tipomovimiento.objects.all()
+    ubicacionesinventario=Ubicacioninventario.objects.all()
+    inventario = Inventario.objects.all()
+    context = {
+            "productos": productos,
+            "categoriaproductos": categoriaproductos,
+            "tallas": tallas,
+            "inventarios": inventarios,
+            "tiposmovimientosint": tiposmovimientosint,
+            "ubicacionesinventario": ubicacionesinventario,
+            "empleados": empleado,
+            "cliente": cliente,
+            "ventas": vistaVentas,
+            "inventario":inventario
+    }
+        
+    return render(request, "gestionVentas.html", context)
 
 
 @login_required
@@ -566,8 +618,8 @@ def editarEmpleado(request, idempleado):
     return render(request, 'edicionEmpleado.html', {'empleado': empleado})
 
 
-def eliminarEmpleado(request, idempleado):
-    empleado=Empleado.objects.get(idempleado=idempleado)
+def eliminarEmpleado(request, idEmpleado):
+    empleado=Empleado.objects.get(idEmpleado=idEmpleado)
     empleado.delete()
     
     return redirect('/')
@@ -617,15 +669,7 @@ def vistaInventario(request):
 
 
 def registrarInventario(request):
-    """
-    Registra un nuevo inventario en el sistema.
-
-    Args:
-        request: Objeto HttpRequest que contiene la información de la solicitud.
-
-    Retorno:
-        HttpResponse con la vista de gestión de inventario.
-    """
+  
 
     if request.method == 'POST':
         # Obtener datos del formulario
@@ -699,8 +743,8 @@ def registrarInventario(request):
             tipomovimiento_obj = Tipomovimiento.objects.filter(tipomovimiento=tipomovimiento).first()
 
         # Crear el producto
-        producto, created = Producto.objects.get_or_create(nombreproducto=nombreproducto, precioventa=precioventa, 
-                                       descripcionproducto=descripcionproducto, idcategoriaproducto=categoria, idtalla=talla)
+        producto, created = Producto.objects.get_or_create(nombreproducto=nombreproducto, precioventa=precioventa, descripcionproducto=descripcionproducto, idcategoriaproducto=categoria, idtalla=talla)
+
 
         # Crear el inventario
         inventario = Inventario.objects.create(fechainventario=fechainventario, cantidadproductos=cantidadproductos, 
