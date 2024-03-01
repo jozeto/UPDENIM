@@ -7,99 +7,110 @@
             <h2>Editar Inventario</h2>
          <div class="card">
             <div class="card-body">
-                <form method="POST" action="/editarInventario/{{ inventario.idinventario }}/"> {% csrf_token %}
+                <form method="POST" action="/editarInventario/{{ inventarios.idinventario }}/"> {% csrf_token %}
+
                     <div class="form-group">
-                        <div class="form-group">
-                            <label for="txtfechainventario">Fecha Inventario</label>
-                            <input type="date" id="txtfechainventario" name="txtfechainventario" 
-                            value="{% if inventario.fechainventario %}{{ inventario.fechainventario|date:'Y-m-d' }}{% endif %}"
-                            class="form-control" placeholder="Fecha de Inventario" minlength="8" maxlength="12" required>                        </div>
-                        <div class="form-group">
-                            <label for="txtcantidadproductos"># Prod.</label>
-                            <input type="text" id="txtcantidadproductos" name="txtcantidadproductos" value="{{inventario.cantidadproductos}}"
-                            class="form-control" placeholder="Cantidad" min="1" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="txtnombreproducto">Nombre Producto</label>
-                            <input type="text" id="txtnombreproducto" name="txtnombreproducto" value="{{inventario.idproductoinv.nombreproducto}}"
-                             class="form-control" placeholder="Producto" minlength="3" maxlength="25" required>                                
-                        </div>
-                        <div class="form-group">
-                            <label for="txtprecioventa">Precio Venta</label>
-                            <input type="text" id="txtprecioventa" name="txtprecioventa" value="{{inventario.idproductoinv.precioventa}}"
-                            class="form-control" placeholder="Precio Venta" min="1000" required>                                
-                        </div>
-                        <div class="form-group">
-                            <label for="txtdescripcionproducto">Descripcion</label>
-                            <input type="text" id="txtdescripcionproducto" name="txtdescripcionproducto" value="{{inventario.idproductoinv.descripcionproducto}}"
-                             class="form-control" placeholder="Descripcion" minlength="4" maxlength="50" required>
-                                
-                        </div>
-                        <div class="form-group">
-                            <label for="txtcategoriaproducto">Categoria</label>
-                            <select id="txtcategoriaproducto" name="txtcategoriaproducto" class="form-control" required>
-                                <option value="">Selecciona tipo Categoria</option>
-                                <option value="Camisas" {% if inventario.idproductoinv.idcategoriaproducto.categoriaproducto == 'Camisas' %} selected {% endif %}>Camisas</option>
-                                <option value="Camisetas" {% if inventario.idproductoinv.idcategoriaproducto.categoriaproducto == 'Camisetas' %} selected {% endif %}>Camisetas</option>
-                                <option value="jeans" {% if inventario.idproductoinv.idcategoriaproducto.categoriaproducto == 'jeans' %} selected {% endif %}>jeans</option>
-                                <option value="Pantalones Drill" {% if inventario.idproductoinv.idcategoriaproducto.categoriaproducto == 'Pantalones Drill' %} selected {% endif %}>Pantalones Drill</option>
-                                <option value="Busos" {% if inventario.idproductoinv.idcategoriaproducto.categoriaproducto == 'Busos' %} selected {% endif %}>Busos</option>
-                                <option value="Chaquetas" {% if inventario.idproductoinv.idcategoriaproducto.categoriaproducto == 'Chaquetas' %} selected {% endif %}>Chaquetas</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="txttalla">Talla</label>
-                            <select id="txttalla" name="txttalla" class="form-control" required>
-                                <option value="">Selecciona una Talla</option>
-                                <option value="XS" {% if inventario.idproductoinv.idtalla.talla == 'XS' %} selected {% endif %}>XS</option>
-                                <option value="S" {% if inventario.idproductoinv.idtalla.talla == 'S' %} selected {% endif %}>S</option>
-                                <option value="M" {% if inventario.idproductoinv.idtalla.talla == 'M' %} selected {% endif %}>M</option>
-                                <option value="L" {% if inventario.idproductoinv.idtalla.talla == 'L' %} selected {% endif %}>L</option>
-                                <option value="XL" {% if inventario.idproductoinv.idtalla.talla == 'XL' %} selected {% endif %}>XL</option>
-                                <option value="2XL" {% if inventario.idproductoinv.idtalla.talla == '2XL' %} selected {% endif %}>2XL</option>
-                                <option value="3XL" {% if inventario.idproductoinv.idtalla.talla == '3XL' %} selected {% endif %}>3XL</option>
-                                <option value="28" {% if inventario.idproductoinv.idtalla.talla == '28' %} selected {% endif %}>28</option>
-                                <option value="30" {% if inventario.idproductoinv.idtalla.talla == '30' %} selected {% endif %}>30</option>
-                                <option value="32" {% if inventario.idproductoinv.idtalla.talla == '32' %} selected {% endif %}>32</option>
-                                <option value="34" {% if inventario.idproductoinv.idtalla.talla == '34' %} selected {% endif %}>34</option>
-                                <option value="36" {% if inventario.idproductoinv.idtalla.talla == '36' %} selected {% endif %}>36</option>
-                                <option value="38" {% if inventario.idproductoinv.idtalla.talla == '38' %} selected {% endif %}>38</option>
-                                <option value="40" {% if inventario.idproductoinv.idtalla.talla == '40' %} selected {% endif %}>40</option>
-                                <option value="42" {% if inventario.idproductoinv.idtalla.talla == '42' %} selected {% endif %}>42</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="txttipomovimiento">Tipo Movimiento</label>
-                            <select id="txttipomovimiento" name="txttipomovimiento" value="{{inventario.idtipomovimiento.tipomovimiento}}" class="form-control" required>
-                                <option value="">Seleccione tipo Movimiento</option>
-                                <option value="Entrada" {% if inventario.idtipomovimientoinv.tipomovimiento == 'Entrada' %} selected {% endif %}>Entrada</option>
-                                <option value="Salida" {% if inventario.idtipomovimientoinv.tipomovimiento == 'Salida' %} selected {% endif %}>Salida</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="txtubicacioninventario">Ubicacion Inventario</label>
-                            <select id="txtubicacioninventario" name="txtubicacioninventario" class="form-control" required>
-                                <option value="">Selecciona una Ubicacion</option>
-                                <option value="Bodega 22" {% if inventario.idubicacioninventarioinv.ubicacioninventario == 'Bodega 22' %} selected {% endif %}>Bodega 22</option>
-                                <option value="Sotano 3" {% if inventario.idubicacioninventarioinv.ubicacioninventario == 'Sotano 3' %} selected {% endif %}>Sotano 3</option>
-                                <option value="Bodega 17" {% if inventario.idubicacioninventarioinv.ubicacioninventario == 'Bodega 17' %} selected {% endif %}>Bodega 17</option>
-                                <option value="Bodega 18" {% if inventario.idubicacioninventarioinv.ubicacioninventario == 'Bodega 18' %} selected {% endif %}>Bodega 18</option>
-                                <option value="Bodega Principal" {% if inventario.idubicacioninventarioinv.ubicacioninventario == 'Bodega Principal' %} selected {% endif %}>Bodega Principal</option>
-                            </select>
-                        </div>
+                        <label for="txtfechainventario">Fecha Inventario</label>
+                        <input type="date" id="txtfechainventario" name="txtfechainventario" class="form-control" value="{{ inventarios.fechainventario|date:'Y-m-d' }}" placeholder="Fecha de Inventario" required>
                     </div>
+                    
                     <div class="form-group">
-                        <label for="idEmpleado">Empleado usuario</label>
-                        <select id="txtidempleado" name="txtidempleado" class="form-control" required>
-                            <option value="">Selecciona un empleado</option>
-                            {% for empleado in empleados %}
-                            <option value="{{ empleado.idEmpleado}}">{{ empleado.idEmpleado }}</option>
+                        <label for="txtcantidadproductos"># Prod.</label>
+                        <input type="text" id="txtcantidadproductos" name="txtcantidadproductos"  class="form-control" value="{{inventarios.cantidadproductos}}" placeholder="Cantidad" 
+                            min="1" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="txtnombreproducto">Producto</label>
+                        <select id="txtnombreproducto" name="txtnombreproducto" class="form-control" required>
+                            <option value="{{ inventarios.idproductoinv }}">{{ inventarios.idproductoinv.nombreproducto }}</option>
+                            {% for producto in productos %}
+                                {% if producto.id != inventarios.idproductoinv %}
+                                    <option value="{{ producto.id }}">{{ producto.nombreproducto }}</option>
+                                {% endif %}
                             {% endfor %}
                         </select>
                     </div>
+
+
+                    
+                    <div class="form-group">
+                        <label for="txtprecioventa">Precio Venta</label>
+                        <input type="text" id="txtprecioventa" name="txtprecioventa" class="form-control" value="{{inventarios.idproductoinv.precioventa}}" placeholder="Precio Venta" 
+                            min="1000" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtdescripcionproducto">Descripcion</label>
+                        <input type="text" id="txtdescripcionproducto" name="txtdescripcionproducto" class="form-control" value="{{inventarios.idproductoinv.descripcionproducto}}" placeholder="Descripcion" 
+                            minlength="4" maxlength="50" required>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="txtcategoriaproducto">Categoría de producto</label>
+                        <select id="txtcategoriaproducto" name="txtcategoriaproducto" class="form-control" required>
+                            <option value="{{ inventarios.idproductoinv.idcategoriaproducto }}">{{ inventarios.idproductoinv.idcategoriaproducto.categoriaproducto }}</option>
+                            {% for cate in categoriaproductos %}
+                                {% if cate.idcategoriaproducto != inventarios.idproductoinv.idcategoriaproducto %}
+                                    <option value="{{ cate.id }}">{{ cate.categoriaproducto }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+
+
+                    
+
+
+                    <div class="form-group">
+                        <label for="txttalla">Talla</label>
+                        <select id="txttalla" name="txttalla" class="form-control" required>
+                            <option value="{{inventarios.idproductoinv.idtalla.talla}}">{{inventarios.idproductoinv.idtalla.talla}} </option>
+                            {% for tallas in talla %}
+                            <option value="{{ tallas.talla }}">{{ tallas.talla }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="txttipomovimiento">Tipo Movimiento</label>
+                        <select id="txttipomovimiento" name="txttipomovimiento" class="form-control" required>
+                            <option value="{{inventarios.idtipomovimientoinv.tipomovimiento}}">{{inventarios.idtipomovimientoinv.tipomovimiento}}</option>
+                            {% for tipos in tipo %}
+                            <option value="{{ tipos.tipomovimiento }}">{{ tipos.tipomovimiento }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+
+                    
+                    <div class="form-group">
+                        <label for="txtubicacioninventario">Nombre ubicacionesinventario producto</label>
+                        <select id="txtubicacioninventario" name="txtubicacioninventario" class="form-control" required>
+                            {% for ubi in ubicacionesinventario %}
+                                <option value="{{ ubi.ubicacioninventario }}" {% if ubi.ubicacioninventario == inventarios.idubicacioninventarioinv.ubicacioninventario %} selected {% endif %}>{{ ubi.ubicacioninventario }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    
+
+                    
+                    <div class="form-group">
+                        <label for="txtidempleado">Empleado usuario</label>
+                        <select id="txtidempleado" name="txtidempleado" class="form-control" required>
+                            {% for empleado in empleados %}
+                                <option value="{{ empleado.idEmpleado }}" {% if empleado.idEmpleado == inventarios.idEmpleado.idEmpleado %} selected {% endif %}>{{ empleado.idDocumentoEmp.primernombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
                     <div class="form-group">
                         <button type="submit" class="btn btn-success btn-block text-whith">Guardar</button>
                     </div>
+                   
 
     </div>
 

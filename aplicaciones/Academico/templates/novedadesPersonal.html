@@ -149,7 +149,7 @@
             </div>
         </div>    
     </div>  
-    <div class="col-md-6">
+    <div class="col-md-8">
         <h2 class="mb-4">Listado de Empleados</h2>
         <div class="table-responsive">
             <table class="table table-striped">
@@ -187,30 +187,30 @@
                     <tr>
                         <td>{{forloop.counter}}</td>
                         <td>{{c.idDocumentoEmp}}</td>
-                        <td>{{c.iddocumento.primernombre}}</td>
-                        <td>{{c.iddocumento.segundonombre}}</td>
-                        <td>{{c.iddocumento.primerapellido}}</td>
-                        <td>{{c.iddocumento.segundoapellido}}</td>
-                        <td>{{c.iddocumento.idcontacto.telefono}}</td>
-                        <td>{{c.iddocumento.idcontacto.correo}}</td>
-                        <td>{{c.iddocumento.iddireccion.idciudad.ciudad}}</td>
-                        <td>{{c.iddocumento.iddireccion.direccion}}</td>
-                        <td>{{c.iddocumento.iddireccion.barrio}}</td>
+                        <td>{{c.idDocumentoEmp.primernombre}}</td>
+                        <td>{{c.idDocumentoEmp.segundonombre}}</td>
+                        <td>{{c.idDocumentoEmp.primerapellido}}</td>
+                        <td>{{c.idDocumentoEmp.segundoapellido}}</td>
+                        <td>{{c.idDocumentoEmp.idcontacto.telefono}}</td>
+                        <td>{{c.idDocumentoEmp.idcontacto.correo}}</td>
+                        <td>{{c.idDocumentoEmp.iddireccion.idciudad.ciudad}}</td>
+                        <td>{{c.idDocumentoEmp.iddireccion.direccion}}</td>
+                        <td>{{c.idDocumentoEmp.iddireccion.barrio}}</td>
                         <td>{{c.idEmpleado}}</td>
-                        <td>{{c.fechaingreso}}</td>
-                        <td>{{c.fechanacimiento}}</td>
-                        <td>{{c.iddocumento.idgenero.genero}}</td>
-                        <td>{{c.idcargoempleado.cargoempleado}}</td>
+                        <td>{{c.fechaIngreso}}</td>
+                        <td>{{c.fechaNacimiento}}</td>
+                        <td>{{c.idDocumentoEmp.idgenero.genero}}</td>
+                        <td>{{c.idCargoEmpleado.cargoEmpleado}}</td>
                         <td>{{c.salario}}</td>
                         <td>{{c.rh}}</td>
                         <td>{{c.ideps.eps}}</td> 
                         <td>{{c.idarl.arl}}</td>
                         <td>{{c.idFondoPension.fondoPension}}</td>
-                        <td>{{c.iduser.username}}</td>
+                        <td>{{c.iduser.usuario}}</td>
                         <td>{{c.iduser.password}}</td>
                         <td>{{c.idrol.rol}}</td>
-                        <td><a href="edicionEmpleado/{{c.idempleado}}" class="btn btn-info" onclick="return confirm('¿Estás seguro de que quieres editar los campos de este empleado?')">Editar<a/></td>
-                        <td><a href="eliminarEmpleado/{{c.idempleado}}" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar este empleado?')">Eliminar<a/></td>
+                        <td><a href="edicionEmpleado/{{c.idEmpleado}}" class="btn btn-info" onclick="return confirm('¿Estás seguro de que quieres editar los campos de este empleado?')">Editar<a/></td>
+                        <td><a href="eliminarEmpleado/{{c.idEmpleado}}" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar este empleado?')">Eliminar<a/></td>
                     </tr>
                     {% endfor %}
                 </tbody>

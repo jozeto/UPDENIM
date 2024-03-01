@@ -9,11 +9,12 @@ urlpatterns = [
     path('gestionVentas/', views.vistaVentas),
     path('registrarVenta/', views.registrarVenta),
     path('eliminarVenta/<int:idVenta>', views.eliminarVenta, name='eliminarVenta'),
-    path('edicionVenta/<int:idVenta>',views.edicionVenta, name='edicionVenta'),
-    path('editarVenta/', views.editarVenta),
+    path('editarVenta/<int:idVenta>/', views.editarVenta, name='editarVenta'),
+    path('edicionVenta/<int:idVenta>/', views.edicionVenta, name='edicionVenta'),
+    
     #-------------------------------CLIENTE----------------------------------------------
-    path('eliminarCliente/<int:idCliente>', views.eliminarCliente, name='eliminarCliente'),
-    path('edicionCliente/<int:idCliente>', views.edicionCliente, name='edicionCliente'), 
+    path('eliminarCliente/<int:idcliente>', views.eliminarCliente, name='eliminarCliente'),
+    path('edicionCliente/<int:idcliente>', views.edicionCliente, name='edicionCliente'), 
     path('editarCliente/', views.editarCliente),
     path('registrarCliente/',views.registrarCliente, name='registrarCliente'),
     
@@ -25,14 +26,14 @@ urlpatterns = [
     
 #-------------------------EMPLEADO-----------------------------------------------------
     path('registrarEmpleado/', views.registrarEmpleado),
-    path('edicionEmpleado/<idempleado>', views.edicionEmpleado),
-    path('editarEmpleado/<int:idempleado>/', views.editarEmpleado, name='editarEmpleado'),
-    path('eliminarEmpleado/<idempleado>', views.eliminarEmpleado),
+    path('edicionEmpleado/<idEmpleado>', views.edicionEmpleado),
+    path('editarEmpleado/<int:idEmpleado>/', views.editarEmpleado, name='editarEmpleado'),
+    path('eliminarEmpleado/<idEmpleado>', views.eliminarEmpleado),
     path('personal/', views.personal, name ='personal'),
     
     
 #---------------------------------INVENTARIO-----------------------
-    path('registrarInventario/', views.vistaInventario),
+    path('registrarInventario/', views.vistaInventario, name='vistaInventario'),
     path('edicionInventario/<idinventario>', views.edicionInventario, name='edicionInventario'),
     path('editarInventario/<int:idinventario>/', views.editarInventario, name='editarInventario'),
     path('eliminarInventario/<idinventario>', views.eliminarInventario, name='eliminarInventario'),
