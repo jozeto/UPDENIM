@@ -19,6 +19,7 @@ from datetime import datetime
 from django.db import transaction
 from django.core.exceptions import MultipleObjectsReturned
 from django.db import transaction
+from decimal import Decimal
 
 
 
@@ -171,11 +172,11 @@ def eliminarCliente(request, idcliente):
 def edicionVenta(request, idVenta):
     venta = Ventas.objects.get(idVenta=idVenta)
     
+    
     cliente = Cliente.objects.all()
-    empleado = Empleado.objects.all()
     inventarios=Inventario.objects.all()
     productos = Producto.objects.all() 
-    empleado = Empleado.objects.all()
+    empleados = Empleado.objects.all()
     categoriaproductos=Categoriaproducto.objects.all()
     tallas=Talla.objects.all()
     inventarios=Inventario.objects.all()
@@ -189,19 +190,19 @@ def edicionVenta(request, idVenta):
             "inventarios": inventarios,
             "tiposmovimientosint": tiposmovimientosint,
             "ubicacionesinventario": ubicacionesinventario,
-            "empleados": empleado,
+            "empleado": empleados,
             "cliente": cliente,
             "ventas": venta,
             "inventario":inventario
     
     }
         
-    return render(request, "edicionventa.html", context)
+    return render(request, "edicionVenta.html", context)
     
 @login_required
 def edicionCliente(request, idcliente):
     cliente = Cliente.objects.get(idcliente=idcliente)
-    messages.success(request, '¡Cliente actualizado!')
+    
     return render(request, "edicionCliente.html", {"cliente": cliente})
 @login_required
 def editarCliente(request):
@@ -226,66 +227,61 @@ def editarCliente(request):
         return HttpResponseNotAllowed(['POST'])
 
 @login_required
-def editarVenta(request):
-    idVenta = request.POST['txtIdEditar']
-    idEmpleado_id = request.POST['txtEmpleado']  # Obtener el ID del empleado del formulario
-    idCliente_id = request.POST['txtClientes']  # Obtener el ID del cliente del formulario
-    idProducto = request.POST['txtProducto']
-    cantidadProductos = request.POST['txtCantidad']
-    descuentoVenta = request.POST['txtDescuento']
-    precioProducto = request.POST['txtPrecio']
-    TotalVenta = request.POST['txtVenta']
-   
-    # Obtener la instancia del cliente correspondiente
-    cliente = get_object_or_404(Cliente, idCliente=idCliente_id)
-
-    # Obtener la instancia del empleado correspondiente
-    empleado = get_object_or_404(Empleado, idEmpleado=idEmpleado_id)
-
-    # Obtener la instancia de la venta que se va a editar
+def editarVenta(request, idVenta):
+    
     venta = Ventas.objects.get(idVenta=idVenta)
-    
-    # Actualizar los campos de la venta con los nuevos valores
-    venta.idEmpleado = empleado
-    venta.idCliente = cliente
-    venta.idProducto = idProducto
-    venta.cantidadProductos = cantidadProductos
-    venta.descuentoVenta = descuentoVenta
-    venta.precioProducto = precioProducto
-    venta.TotalVenta = TotalVenta
-    
-    # Guardar los cambios en la venta
-    venta.save()
-    
-    # Obtener todas las ventas después de la edición
-    venta = Ventas.objects.get(idVenta=idVenta)
-    messages.success(request, '¡Venta actualizada!')
+
+    if request.method == 'POST':
+        idEmpleado_id = request.POST['txtEmpleado']
+        idcliente_id = request.POST['txtClientela']
+        idProducto = request.POST['txtProducto']
+        cantidadProductos = request.POST['txtCantidad']
+        descuentoVenta = request.POST['txtDescuento']
+        precioProducto = request.POST['txtPrecio']
+        TotalVenta = request.POST['txtVenta']
+
+        cliente = get_object_or_404(Cliente, idcliente=idcliente_id)
+        empleado = get_object_or_404(Empleado, idEmpleado=idEmpleado_id)
+
+        venta.idEmpleado = empleado
+        venta.idCliente = cliente
+        venta.idProducto = idProducto
+        venta.cantidadProductos = cantidadProductos
+        venta.descuentoVenta = descuentoVenta
+        venta.precioProducto = precioProducto
+
+        # Recalcula el precio total de la venta
+        precio_total = (Decimal(precioProducto) * Decimal(cantidadProductos)) - Decimal(descuentoVenta)
+        venta.TotalVenta = precio_total
+
+        venta.save()
+
+        messages.success(request, '¡Venta actualizada!')
+
     cliente = Cliente.objects.all()
+    empleado = Empleado.objects.all()
+    productos = Producto.objects.all()
+    categoriaproductos = Categoriaproducto.objects.all()
+    tallas = Talla.objects.all()
+    tiposmovimientosint = Tipomovimiento.objects.all()
+    ubicacionesinventario = Ubicacioninventario.objects.all()
     vistaVentas = Ventas.objects.all()
-    empleado = Empleado.objects.all()
-    inventarios=Inventario.objects.all()
-    productos = Producto.objects.all() 
-    empleado = Empleado.objects.all()
-    categoriaproductos=Categoriaproducto.objects.all()
-    tallas=Talla.objects.all()
-    inventarios=Inventario.objects.all()
-    tiposmovimientosint=Tipomovimiento.objects.all()
-    ubicacionesinventario=Ubicacioninventario.objects.all()
     inventario = Inventario.objects.all()
+
     context = {
-            "productos": productos,
-            "categoriaproductos": categoriaproductos,
-            "tallas": tallas,
-            "inventarios": inventarios,
-            "tiposmovimientosint": tiposmovimientosint,
-            "ubicacionesinventario": ubicacionesinventario,
-            "empleados": empleado,
-            "cliente": cliente,
-            "ventas": vistaVentas,
-            "inventario":inventario
+        "productos": productos,
+        "categoriaproductos": categoriaproductos,
+        "tallas": tallas,
+        "tiposmovimientosint": tiposmovimientosint,
+        "ubicacionesinventario": ubicacionesinventario,
+        "empleados": empleado,
+        "cliente": cliente,
+        "ventas": vistaVentas,
+        "inventario": inventario,
     }
-        
-    return render(request, "gestionVentas.html", context)
+
+    return render(request, "gestionventas.html", context)
+
 
 
 @login_required
@@ -634,16 +630,19 @@ def inventarioss(request):
     categoriaproductos=Categoriaproducto.objects.all()
     tallas=Talla.objects.all()
     inventarios=Inventario.objects.all()
-    tiposmovimientosint=Tipomovimiento.objects.all()
     ubicacionesinventario=Ubicacioninventario.objects.all()
+    tipo=Tipomovimiento.objects.all()
+    talla=Talla.objects.all()
+    categoria=Categoriaproducto.objects.all()
     context = {
         "productos": productos,
-        "categoriaproductos": categoriaproductos,
-        "tallas": tallas,
+        "categoriaproductos": categoriaproductos,    
         "inventarios": inventarios,
-        "tiposmovimientosint": tiposmovimientosint,
         "ubicacionesinventario": ubicacionesinventario,
-        "empleados": empleado
+        "empleados": empleado,
+        "tipo":tipo,
+        "talla":talla,
+        "categoria":categoria,
     }
     
     return render(request, "gestionInventario.html", context)
@@ -655,14 +654,25 @@ def vistaInventario(request):
         productos = Producto.objects.all()
         empleados = Empleado.objects.all()
         inventarios = Inventario.objects.all()
+        ubicacionesinventario=Ubicacioninventario.objects.all()
+        tipo=Tipomovimiento.objects.all()
+        talla=Talla.objects.all()
+        categoria=Categoriaproducto.objects.all()
+
         
         # Renderizar la plantilla con los datos obtenidos
         return render(request, "gestionInventario.html", {
             "productos": productos,
             "empleados": empleados,
-            "inventarios": inventarios
+            "inventarios": inventarios,
+            "ubicacionesinventario": ubicacionesinventario,
+            "tipo":tipo,
+            "talla":talla,
+            "categoria":categoria,
+
         })
     else:
+        
         return registrarInventario(request)
         
         
@@ -751,35 +761,58 @@ def registrarInventario(request):
                                        idproductoinv=producto, idtipomovimientoinv=tipomovimiento_obj, idEmpleado=empleado, 
                                        idubicacioninventarioinv=ubicacioninventario)
 
-        # Mostrar mensaje de éxito
-        mensajes = {'success': 'Inventario registrado correctamente.'}
+        
+        messages.success(request, '¡Inventario registrado exitosamente!')
 
         # Obtener datos para la vista
-        inventarios = Inventario.objects.all()
-        productos = Producto.objects.all()
-        empleado = Empleado.objects.all()
-        categoriaproductos = Categoriaproducto.objects.all()
-        tallas = Talla.objects.all()
-        inventarios = Inventario.objects.all()
-        tiposmovimientosint = Tipomovimiento.objects.all()
-        ubicacionesinventario = Ubicacioninventario.objects.all()
-        context = {
-            "productos": productos,
-            "categoriaproductos": categoriaproductos,
-            "tallas": tallas,
-            "inventarios": inventarios,
-            "tiposmovimientosint": tiposmovimientosint,
-            "ubicacionesinventario": ubicacionesinventario,
-            "empleados": empleado,
-            "mensajes": mensajes,
-        }
-        
-        return render(request, "gestionInventario.html", context)
+    inventarios=Inventario.objects.all()
+    productos = Producto.objects.all()
+    empleado = Empleado.objects.all()
+    categoriaproductos=Categoriaproducto.objects.all()
+    tallas=Talla.objects.all()
+    inventarios=Inventario.objects.all()
+    ubicacionesinventario=Ubicacioninventario.objects.all()
+    tipo=Tipomovimiento.objects.all()
+    talla=Talla.objects.all()
+    categoria=Categoriaproducto.objects.all()
+    context = {
+        "productos": productos,
+        "categoriaproductos": categoriaproductos,    
+        "inventarios": inventarios,
+        "ubicacionesinventario": ubicacionesinventario,
+        "empleados": empleado,
+        "tipo":tipo,
+        "talla":talla,
+        "categoria":categoria,
+    }
+    
+    return render(request, "gestionInventario.html", context)
     
 
 def edicionInventario(request, idinventario):
     inventario=Inventario.objects.get(idinventario=idinventario)
-    return render(request, "edicionInventario.html", {"inventario":inventario})
+    
+    productos = Producto.objects.all()
+    empleado = Empleado.objects.all()
+    categoriaproductos=Categoriaproducto.objects.all()
+    talla=Talla.objects.all()
+    
+    ubicacionesinventario=Ubicacioninventario.objects.all()
+    tipo=Tipomovimiento.objects.all()
+    talla=Talla.objects.all()
+    categoria=Categoriaproducto.objects.all()
+    context = {
+        "productos": productos,
+        "categoriaproductos": categoriaproductos,    
+        "inventarios": inventario,
+        "ubicacionesinventario": ubicacionesinventario,
+        "empleados": empleado,
+        "tipo":tipo,
+        "talla":talla,
+        "categoria":categoria,
+    }
+    
+    return render(request, "edicionInventario.html", context)
 
 
 def editarInventario(request, idinventario):
@@ -792,7 +825,13 @@ def editarInventario(request, idinventario):
         
         # Acceder a los atributos del modelo relacionado Producto
         inventario.idproductoinv.nombreproducto = request.POST.get('txtnombreproducto')
-        inventario.idproductoinv.precioventa = request.POST.get('txtprecioventa')
+        precio_venta_str = request.POST.get('txtprecioventa')
+        if precio_venta_str:
+            # Reemplazar la coma por un punto y convertir a flotante
+            precio_venta = float(precio_venta_str.replace(',', '.'))
+
+            # Asignar el valor convertido al campo
+            inventario.idproductoinv.precioventa = precio_venta
         inventario.idproductoinv.descripcionproducto = request.POST.get('txtdescripcionproducto')
         
         # Guardar el contacto asociado al empleado
@@ -810,10 +849,10 @@ def editarInventario(request, idinventario):
         inventario.cantidadproductos = request.POST.get('txtcantidadproductos')
 
         # Obtener el id del empleado del formulario
-        id_empleado = request.POST.get('txtidempleado')
+        idEmpleado = request.POST.get('txtidempleado')
 
         # Obtener o crear el objeto Empleado
-        empleado_obj, created = Empleado.objects.get_or_create(idempleado=id_empleado)
+        empleado_obj, created = Empleado.objects.get_or_create(idEmpleado=idEmpleado)
 
         # Asignar el objeto Empleado al inventario
         inventario.idempleado = empleado_obj
@@ -828,15 +867,22 @@ def editarInventario(request, idinventario):
         return redirect('vistaInventario')  # Redirige a la página principal
 
     # Si no es una solicitud POST, renderiza la página de edición con los datos del inventario
-    return render(request, 'edicionInventario.html', {'inventario': inventario})
+    
+
+    return render(request, "gestionInventario.html")
 
 
 
 
-
+from django.shortcuts import redirect
 
 def eliminarInventario(request, idinventario):
-    inventario=Inventario.objects.get(idinventario=idinventario)
+    inventario = Inventario.objects.get(idinventario=idinventario)
     inventario.delete()
     
-    return redirect('vistaInventario')
+    messages.success(request, '¡Inventario eliminado correctamente!')
+
+    # Redirigir a la página anterior
+    return redirect(request.META['HTTP_REFERER'])
+
+    

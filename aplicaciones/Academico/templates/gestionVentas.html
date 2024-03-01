@@ -126,7 +126,7 @@
                 <td>{{v.descuentoVenta }}</td>
                 <td>{{v.TotalVenta }}</td>
               
-                <td><a href="/edicionVenta/{{v.idVenta}}" class="btn btn-info">Editar</a></td>
+                <td><a href="{% url 'edicionVenta' idVenta=v.idVenta %}" class="btn btn-info">Editar</a></td>
                 <td><a href="/eliminarVenta/{{v.idVenta}}" class="btn btn-danger btnEliminacion">Eliminar</a></td>
 
                     

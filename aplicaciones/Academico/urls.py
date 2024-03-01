@@ -9,8 +9,9 @@ urlpatterns = [
     path('gestionVentas/', views.vistaVentas),
     path('registrarVenta/', views.registrarVenta),
     path('eliminarVenta/<int:idVenta>', views.eliminarVenta, name='eliminarVenta'),
-    path('edicionVenta/<int:idVenta>',views.edicionVenta, name='edicionVenta'),
-    path('editarVenta/', views.editarVenta),
+    path('editarVenta/<int:idVenta>/', views.editarVenta, name='editarVenta'),
+    path('edicionVenta/<int:idVenta>/', views.edicionVenta, name='edicionVenta'),
+    
     #-------------------------------CLIENTE----------------------------------------------
     path('eliminarCliente/<int:idcliente>', views.eliminarCliente, name='eliminarCliente'),
     path('edicionCliente/<int:idcliente>', views.edicionCliente, name='edicionCliente'), 
@@ -32,7 +33,7 @@ urlpatterns = [
     
     
 #---------------------------------INVENTARIO-----------------------
-    path('registrarInventario/', views.vistaInventario),
+    path('registrarInventario/', views.vistaInventario, name='vistaInventario'),
     path('edicionInventario/<idinventario>', views.edicionInventario, name='edicionInventario'),
     path('editarInventario/<int:idinventario>/', views.editarInventario, name='editarInventario'),
     path('eliminarInventario/<idinventario>', views.eliminarInventario, name='eliminarInventario'),

@@ -10,30 +10,26 @@
         <h2> Edicion de Ventas </h2>    
         <div class="card">
             <div class="card-body">
-                <form action="/editarVenta/" method="POST">  {% csrf_token %}
+                <form method="POST" action="/editarVenta/{{ ventas.idVenta }}/"> {% csrf_token %}
                     <div class="form-group">
 
                         <div class="form-group">
                             <h6>Cantidad Productos</h6>
-                            <input type="text" id="txtNombre" name="txtNombre" class="form-control" value="{{productos.cantidadProductos}}" placeholder="Cantidad Productos" minlength="1" maxlength="58"  required>
+                            <input type="text" id="txtCantidad" name="txtCantidad" class="form-control" value="{{ventas.cantidadProductos}}" placeholder="Cantidad Productos" minlength="1" maxlength="58"  required>
                         </div>
-
-                        
-
-                            
-
-                        </div>
+                    </div>
     
                      
     
-                        <h6>Id Empleado</h6>
-                        <select id="txtEmpleados" name="txtEmpleados" value="{{ empleado.idEmpleado }}" class="form-control" required>
-                            
-                            <option value="">Seleccione un Empleado</option>
-                            {% for empleado in empleados %}
-                                <option value="{{ empleado.idEmpleado }}">{{ empleado.idDocumentoEmp.primernombre }}</option>
-                            {% endfor %}
-                        </select>
+                            <h6>Id Empleado</h6>
+                            <select id="txtEmpleado" name="txtEmpleado" class="form-control" required>
+                                <option value="">Seleccione un Empleado</option>
+                                {% for emp in empleado %}
+                                    <option value="{{ emp.idEmpleado }}" {% if empleado.idEmpleado == emp.idEmpleado %} selected {% endif %}>
+                                        {{ emp.idDocumentoEmp.primernombre }}
+                                    </option>
+                                {% endfor %}
+                            </select>
     
                         <h6>Id Cliente</h6>
                         <select id="txtClientela" name="txtClientela" class="form-control" required>
@@ -61,7 +57,7 @@
                         </div>
                         <div class="form-group">
                             <h6>Descuento venta</h6>
-                            <input type="text" id="txtCategoria" name="txtCategoria" class="form-control" value="{{ventas.descuentoVenta}}" placeholder="Descuento venta" minlength="1" maxlength="58" required>
+                            <input type="text" id="txtDescuento" name="txtDescuento" class="form-control" value="{{ventas.descuentoVenta}}" placeholder="Descuento venta" minlength="1" maxlength="58" required>
                         </div>
     
                     <div class="form-group">
