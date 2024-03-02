@@ -23,7 +23,7 @@
     
                             <h6>Id Empleado</h6>
                             <select id="txtEmpleado" name="txtEmpleado" class="form-control" required>
-                                <option value="">Seleccione un Empleado</option>
+                                <option value="{{ventas.idEmpleado.idDocumentoEmp.primernombre}}">{{ventas.idEmpleado.idDocumentoEmp.primernombre}}</option>
                                 {% for emp in empleado %}
                                     <option value="{{ emp.idEmpleado }}" {% if empleado.idEmpleado == emp.idEmpleado %} selected {% endif %}>
                                         {{ emp.idDocumentoEmp.primernombre }}
@@ -34,7 +34,7 @@
                         <h6>Id Cliente</h6>
                         <select id="txtClientela" name="txtClientela" class="form-control" required>
                             
-                            <option value="">Seleccione un Cliente</option>
+                            <option value="{{ventas.idCliente.iddocumento}}">{{ventas.idCliente.iddocumento}}</option>
                             {% for cliente in cliente %}
                                 <option value="{{ cliente.idcliente }}">{{ cliente.iddocumento }}</option>
                             {% endfor %}
