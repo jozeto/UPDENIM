@@ -77,9 +77,8 @@
                     <div class="form-group">
                         <label for="txttipomovimiento">Tipo Movimiento</label>
                         <select id="txttipomovimiento" name="txttipomovimiento" class="form-control" required>
-                            <option value="{{inventarios.idtipomovimientoinv.tipomovimiento}}">{{inventarios.idtipomovimientoinv.tipomovimiento}}</option>
                             {% for tipos in tipo %}
-                            <option value="{{ tipos.tipomovimiento }}">{{ tipos.tipomovimiento }}</option>
+                                <option value="{{ tipos.tipomovimiento }}" {% if tipos.tipomovimiento == inventarios.idtipomovimientoinv.tipomovimiento %} selected {% endif %}>{{ tipos.tipomovimiento }}</option>
                             {% endfor %}
                         </select>
                     </div>

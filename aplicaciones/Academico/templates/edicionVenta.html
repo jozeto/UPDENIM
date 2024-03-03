@@ -21,30 +21,31 @@
     
                      
     
-                            <h6>Id Empleado</h6>
-                            <select id="txtEmpleado" name="txtEmpleado" class="form-control" required>
-                                <option value="{{ventas.idEmpleado.idDocumentoEmp.primernombre}}">{{ventas.idEmpleado.idDocumentoEmp.primernombre}}</option>
-                                {% for emp in empleado %}
-                                    <option value="{{ emp.idEmpleado }}" {% if empleado.idEmpleado == emp.idEmpleado %} selected {% endif %}>
-                                        {{ emp.idDocumentoEmp.primernombre }}
-                                    </option>
-                                {% endfor %}
-                            </select>
+                    <h6>Id Empleado</h6>
+                    <select id="txtEmpleado" name="txtEmpleado" class="form-control" required>
+                        {% for emp in empleado %}
+                            <option value="{{ emp.idEmpleado }}" {% if ventas.idEmpleado.idDocumentoEmp.primernombre == emp.idDocumentoEmp.primernombre %} selected {% endif %}>
+                                {{ emp.idDocumentoEmp.primernombre }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    
     
-                        <h6>Id Cliente</h6>
-                        <select id="txtClientela" name="txtClientela" class="form-control" required>
-                            
-                            <option value="{{ventas.idCliente.iddocumento}}">{{ventas.idCliente.iddocumento}}</option>
-                            {% for cliente in cliente %}
-                                <option value="{{ cliente.idcliente }}">{{ cliente.iddocumento }}</option>
-                            {% endfor %}
-                        </select>
+                    <h6>Id Cliente</h6>
+                    <select id="txtClientela" name="txtClientela" class="form-control" required>
+                        {% for cliente in cliente %}
+                            <option value="{{ cliente.idcliente }}" {% if ventas.idCliente.iddocumento == cliente.iddocumento %} selected {% endif %}>
+                                {{ cliente.iddocumento }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    
                        
                         
                         <div class="form-group">
                             <label for="nombreproducto">Nombre producto</label>
                             <select id="txtProducto" name="txtProducto" class="form-control" required>
-                                <option value="">Selecciona un producto</option>
+                                <option value="{{ ventas.idInventario.idproductoinv.nombreproducto}}"> {{ ventas.idInventario.idproductoinv.nombreproducto}}  cantidad productos:{{ ventas.idInventario.cantidadproductos }}, Precio producto: {{ ventas.idInventario.idproductoinv.precioventa }}</option>
                                 {% for inventario in inventario %}
                                 <option value="{{ inventario.idinventario }}">{{ inventario.idproductoinv.nombreproducto }} cantidad productos:{{ inventario.cantidadproductos }}, Precio producto: {{ inventario.idproductoinv.precioventa }}</option>
                                 {% endfor %}

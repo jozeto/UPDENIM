@@ -21,6 +21,10 @@ from django.core.exceptions import MultipleObjectsReturned
 from django.db import transaction
 from decimal import Decimal
 
+from django.http import HttpResponseForbidden
+
+
+
 
 
 def login(request):
@@ -42,7 +46,8 @@ def login(request):
 
 @login_required
 def vistaVentas(request): 
-   
+    if not request.user.is_staff:
+        return render(request,"home.html")
     cliente = Cliente.objects.all()
     vistaVentas = Ventas.objects.all()
     empleado = Empleado.objects.all()
@@ -94,6 +99,9 @@ def registrarVenta(request):
             cliente = get_object_or_404(Cliente, pk=idCliente)
             empleado = get_object_or_404(Empleado, pk=idEmpleado)
 
+            # Obtener la instancia de Producto
+            producto = get_object_or_404(Producto, pk=idProducto)
+
             # Calcular el total de la venta restando el descuento del precio del producto
             totalVenta = precioProducto * cantidadProductos - descuentoVenta
 
@@ -101,7 +109,7 @@ def registrarVenta(request):
             venta = Ventas.objects.create(
                 idEmpleado=empleado,
                 idCliente=cliente,
-                idProducto=idProducto,
+                idProducto=producto,  # Utilizamos la instancia de Producto
                 cantidadProductos=cantidadProductos,
                 descuentoVenta=descuentoVenta,
                 precioProducto=precioProducto,

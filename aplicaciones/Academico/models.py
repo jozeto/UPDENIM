@@ -1,10 +1,10 @@
 from django.db import models
+from django.utils import timezone
 
 
 
 
-
-
+default_value = timezone.now
     
     
     
@@ -151,6 +151,56 @@ class Cliente(models.Model):
     def __str__(self):
         return f"{self.iddocumento}" 
     
+class Talla(models.Model):
+    idtalla = models.AutoField(primary_key=True)
+    talla = models.CharField(max_length=45, null=False, blank=False)
+    def __str__(self):
+        return f"{self.talla}"
+
+class Categoriaproducto(models.Model):
+    idcategoriaproducto = models.AutoField(primary_key=True)
+    categoriaproducto = models.CharField(max_length=45, blank=False, null=False)
+    def __str__(self):
+        return f"{self.categoriaproducto}"
+
+
+class Producto(models.Model):
+    idproducto = models.AutoField(primary_key=True)
+    nombreproducto = models.CharField(max_length=45, null=False)
+    precioventa = models.FloatField(null=False, blank=False)
+    descripcionproducto = models.CharField(max_length=45)
+    idcategoriaproducto = models.ForeignKey(Categoriaproducto, on_delete=models.CASCADE)
+    idtalla = models.ForeignKey(Talla, on_delete=models.CASCADE)
+    def __str__(self):
+        return f"{self.nombreproducto}"
+    
+    
+class Tipomovimiento(models.Model):
+    idtipomovimiento = models.AutoField(primary_key=True)
+    tipomovimiento = models.CharField(max_length=45, null=False, blank=False)
+    def __str__(self):
+        return f"{self.tipomovimiento}"
+    
+class Ubicacioninventario(models.Model):
+    idubicacioninventario = models.AutoField(primary_key=True)
+    ubicacioninventario = models.CharField(max_length=45, null=False, blank=False)
+    def __str__(self):
+        return f"{self.ubicacioninventario}"
+
+
+class Inventario(models.Model):
+    idinventario = models.AutoField(primary_key=True)  # Field name made lowercase.
+    fechainventario = models.DateField(auto_now_add=True)  # Field name made lowercase.
+    cantidadproductos = models.IntegerField(null=False, blank=False)  # Field name made lowercase.
+    idproductoinv = models.ForeignKey(Producto, on_delete=models.CASCADE)  # Field name made lowercase.
+    idtipomovimientoinv = models.ForeignKey(Tipomovimiento, on_delete=models.CASCADE)  # Field name made lowercase.
+    idEmpleado = models.ForeignKey(Empleado, on_delete=models.CASCADE)  # Field name made lowercase.
+    idubicacioninventarioinv = models.ForeignKey(Ubicacioninventario, on_delete=models.CASCADE)  # Field name made lowercase.
+    def __str__(self):
+        texto = '{0} {1}'
+        return f":{self.cantidadproductos} - Cantidad Productos {self.idproductoinv.nombreproducto}- Precio Producto {self.idproductoinv.precioventa}"
+    
+   
     
 class Ventas(models.Model):
     idVenta = models.AutoField(primary_key=True)
@@ -159,18 +209,16 @@ class Ventas(models.Model):
     precioProducto = models.CharField(max_length=50)
     idCliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)  
     idEmpleado = models.ForeignKey(Empleado, on_delete=models.CASCADE)  # Corrección aquí
-    idProducto = models.CharField(max_length=50)
+    idProducto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    idInventario = models.ForeignKey(Inventario, on_delete=models.CASCADE, default=1)
+
     TotalVenta = models.CharField(max_length=50)
 
     def __str__(self):
         return f"Venta ID: {self.idVenta} - Cantidad Productos: {self.cantidadProductos}"
     
     
-class Categoriaproducto(models.Model):
-    idcategoriaproducto = models.AutoField(primary_key=True)
-    categoriaproducto = models.CharField(max_length=45, blank=False, null=False)
-    def __str__(self):
-        return f"{self.categoriaproducto}"
+
 
 
 
@@ -187,11 +235,6 @@ class Formapago(models.Model):
     idformapago = models.AutoField(primary_key=True)
     formapago = models.CharField(max_length=45, null=False, blank=False)
 
-class Tipomovimiento(models.Model):
-    idtipomovimiento = models.AutoField(primary_key=True)
-    tipomovimiento = models.CharField(max_length=45, null=False, blank=False)
-    def __str__(self):
-        return f"{self.tipomovimiento}"
 
 class Tiponovedadpersonal(models.Model):
     idtiponovedadpersonal = models.AutoField(primary_key=True)
@@ -205,33 +248,12 @@ class Tipopqr(models.Model):
     idtipopqr = models.AutoField(primary_key=True)
     tipopqr = models.CharField(max_length=45, null=False, blank=False)
 
-class Ubicacioninventario(models.Model):
-    idubicacioninventario = models.AutoField(primary_key=True)
-    ubicacioninventario = models.CharField(max_length=45, null=False, blank=False)
-    def __str__(self):
-        return f"{self.ubicacioninventario}"
-
-class Talla(models.Model):
-    idtalla = models.AutoField(primary_key=True)
-    talla = models.CharField(max_length=45, null=False, blank=False)
-    def __str__(self):
-        return f"{self.talla}"
-
-
 
 
 
 
     
-class Producto(models.Model):
-    idproducto = models.AutoField(primary_key=True)
-    nombreproducto = models.CharField(max_length=45, null=False)
-    precioventa = models.FloatField(null=False, blank=False)
-    descripcionproducto = models.CharField(max_length=45)
-    idcategoriaproducto = models.ForeignKey(Categoriaproducto, on_delete=models.CASCADE)
-    idtalla = models.ForeignKey(Talla, on_delete=models.CASCADE)
-    def __str__(self):
-        return f"{self.nombreproducto}"
+
 
 class Novedadpersonal(models.Model):
     idnovedadpersonal = models.AutoField(primary_key=True)
@@ -262,19 +284,7 @@ class Cotizaciones(models.Model):
     idempleado = models.ForeignKey(Empleado, on_delete=models.CASCADE)  # Field name made lowercase.
     idproducto = models.ForeignKey(Producto, on_delete=models.CASCADE)  # 
     
-class Inventario(models.Model):
-    idinventario = models.AutoField(primary_key=True)  # Field name made lowercase.
-    fechainventario = models.DateField(auto_now_add=True)  # Field name made lowercase.
-    cantidadproductos = models.IntegerField(null=False, blank=False)  # Field name made lowercase.
-    idproductoinv = models.ForeignKey(Producto, on_delete=models.CASCADE)  # Field name made lowercase.
-    idtipomovimientoinv = models.ForeignKey(Tipomovimiento, on_delete=models.CASCADE)  # Field name made lowercase.
-    idEmpleado = models.ForeignKey(Empleado, on_delete=models.CASCADE)  # Field name made lowercase.
-    idubicacioninventarioinv = models.ForeignKey(Ubicacioninventario, on_delete=models.CASCADE)  # Field name made lowercase.
-    def __str__(self):
-        texto = '{0} {1}'
-        return f":{self.cantidadproductos} - Cantidad Productos {self.idproductoinv.nombreproducto}- Precio Producto {self.idproductoinv.precioventa}"
-    
-   
+
     
     
 
