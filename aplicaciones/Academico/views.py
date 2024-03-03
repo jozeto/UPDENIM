@@ -883,6 +883,6 @@ def eliminarInventario(request, idinventario):
     messages.success(request, '¡Inventario eliminado correctamente!')
 
     # Redirigir a la página anterior
-    return redirect(request.META['HTTP_REFERER'])
+    return redirect('vistaInventario') 
 
     
