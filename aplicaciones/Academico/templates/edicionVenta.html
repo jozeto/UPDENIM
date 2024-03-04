@@ -42,15 +42,14 @@
                     
                        
                         
-                        <div class="form-group">
-                            <label for="nombreproducto">Nombre producto</label>
-                            <select id="txtProducto" name="txtProducto" class="form-control" required>
-                                <option value="{{ ventas.idInventario.idproductoinv.nombreproducto}}"> {{ ventas.idInventario.idproductoinv.nombreproducto}}  cantidad productos:{{ ventas.idInventario.cantidadproductos }}, Precio producto: {{ ventas.idInventario.idproductoinv.precioventa }}</option>
-                                {% for inventario in inventario %}
-                                <option value="{{ inventario.idinventario }}">{{ inventario.idproductoinv.nombreproducto }} cantidad productos:{{ inventario.cantidadproductos }}, Precio producto: {{ inventario.idproductoinv.precioventa }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
+                    <div class="form-group">
+                        <label for="nombreproducto">Nombre producto</label>
+                        <select id="txtProducto" name="txtProducto" class="form-control" required>
+                            {% for inventario_item in inventario %}
+                                <option value="{{ inventario_item.idinventario }}">{{ inventario_item.idproductoinv.nombreproducto }} cantidad productos: {{ inventario_item.cantidadproductos }}, Precio producto: {{ inventario_item.idproductoinv.precioventa }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
                         
                         <div class="form-group">
                             <h6>Precio Producto</h6>

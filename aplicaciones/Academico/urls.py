@@ -6,7 +6,7 @@ urlpatterns = [
     
     path('home/', views.home),
     path('gestionCliente/', views.vistaCliente),
-    path('gestionVentas/', views.vistaVentas),
+    path('gestionVentas/', views.vistaVentas,name='vistaVentas'),
     path('registrarVenta/', views.registrarVenta),
     path('eliminarVenta/<int:idVenta>', views.eliminarVenta, name='eliminarVenta'),
     path('editarVenta/<int:idVenta>/', views.editarVenta, name='editarVenta'),

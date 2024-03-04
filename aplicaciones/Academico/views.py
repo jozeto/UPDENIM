@@ -20,6 +20,7 @@ from django.db import transaction
 from django.core.exceptions import MultipleObjectsReturned
 from django.db import transaction
 from decimal import Decimal
+from django.shortcuts import redirect
 
 from django.http import HttpResponseForbidden
 
@@ -83,7 +84,9 @@ def vistaVentas(request):
 def home(request):
     return render(request,"home.html")
 
-@login_required
+
+from .models import Producto  # Importa el modelo Producto
+
 def registrarVenta(request):
     if request.method == 'POST':
         try:
@@ -99,7 +102,7 @@ def registrarVenta(request):
             cliente = get_object_or_404(Cliente, pk=idCliente)
             empleado = get_object_or_404(Empleado, pk=idEmpleado)
 
-            # Obtener la instancia de Producto
+            # Obtener el objeto Producto
             producto = get_object_or_404(Producto, pk=idProducto)
 
             # Calcular el total de la venta restando el descuento del precio del producto
@@ -109,7 +112,7 @@ def registrarVenta(request):
             venta = Ventas.objects.create(
                 idEmpleado=empleado,
                 idCliente=cliente,
-                idProducto=producto,  # Utilizamos la instancia de Producto
+                idProducto=producto,  # Usar el objeto Producto en lugar del ID
                 cantidadProductos=cantidadProductos,
                 descuentoVenta=descuentoVenta,
                 precioProducto=precioProducto,
@@ -124,6 +127,7 @@ def registrarVenta(request):
             messages.success(request, '¡Venta registrada exitosamente!')
         except Exception as e:
             messages.error(request, f'Error al registrar la venta: {str(e)}')
+
 
     # Obtener datos necesarios para renderizar la página
     cliente = Cliente.objects.all()
@@ -149,7 +153,6 @@ def registrarVenta(request):
     }
 
     return render(request, "gestionventas.html", context)
-
 
 
 
@@ -236,13 +239,12 @@ def editarCliente(request):
 
 @login_required
 def editarVenta(request, idVenta):
-    
     venta = Ventas.objects.get(idVenta=idVenta)
 
     if request.method == 'POST':
         idEmpleado_id = request.POST['txtEmpleado']
         idcliente_id = request.POST['txtClientela']
-        idProducto = request.POST['txtProducto']
+        idProducto_id = request.POST['txtProducto']
         cantidadProductos = request.POST['txtCantidad']
         descuentoVenta = request.POST['txtDescuento']
         precioProducto = request.POST['txtPrecio']
@@ -250,10 +252,11 @@ def editarVenta(request, idVenta):
 
         cliente = get_object_or_404(Cliente, idcliente=idcliente_id)
         empleado = get_object_or_404(Empleado, idEmpleado=idEmpleado_id)
+        producto = get_object_or_404(Producto, idproducto=idProducto_id)
 
         venta.idEmpleado = empleado
         venta.idCliente = cliente
-        venta.idProducto = idProducto
+        venta.idProducto = producto
         venta.cantidadProductos = cantidadProductos
         venta.descuentoVenta = descuentoVenta
         venta.precioProducto = precioProducto
@@ -761,16 +764,18 @@ def registrarInventario(request):
             tipomovimiento_obj = Tipomovimiento.objects.filter(tipomovimiento=tipomovimiento).first()
 
         # Crear el producto
-        producto, created = Producto.objects.get_or_create(nombreproducto=nombreproducto, precioventa=precioventa, descripcionproducto=descripcionproducto, idcategoriaproducto=categoria, idtalla=talla)
-
+        try:
+            producto = Producto.objects.get(nombreproducto=nombreproducto)
+        except Producto.DoesNotExist:
+            # Producto no encontrado, mostrar mensaje de error o manejar de otra manera
+            messages.error(request, 'El producto no existe.')
+            return redirect('ruta_de_la_vista_de_inventario')  # Redirigir a la página de inventario o a donde sea necesario
 
         # Crear el inventario
         inventario = Inventario.objects.create(fechainventario=fechainventario, cantidadproductos=cantidadproductos, 
-                                       idproductoinv=producto, idtipomovimientoinv=tipomovimiento_obj, idEmpleado=empleado, 
-                                       idubicacioninventarioinv=ubicacioninventario)
+                                        idproductoinv=producto, idtipomovimientoinv=tipomovimiento_obj, idEmpleado=empleado, 
+                                        idubicacioninventarioinv=ubicacioninventario)
 
-        
-        messages.success(request, '¡Inventario registrado exitosamente!')
 
         # Obtener datos para la vista
     inventarios=Inventario.objects.all()
@@ -881,8 +886,6 @@ def editarInventario(request, idinventario):
 
 
 
-
-from django.shortcuts import redirect
 
 def eliminarInventario(request, idinventario):
     inventario = Inventario.objects.get(idinventario=idinventario)

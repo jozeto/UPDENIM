@@ -210,8 +210,6 @@ class Ventas(models.Model):
     idCliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)  
     idEmpleado = models.ForeignKey(Empleado, on_delete=models.CASCADE)  # Corrección aquí
     idProducto = models.ForeignKey(Producto, on_delete=models.CASCADE)
-    idInventario = models.ForeignKey(Inventario, on_delete=models.CASCADE, default=1)
-
     TotalVenta = models.CharField(max_length=50)
 
     def __str__(self):
