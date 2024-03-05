@@ -21,28 +21,22 @@ from django.core.exceptions import MultipleObjectsReturned
 from django.db import transaction
 from decimal import Decimal
 from django.shortcuts import redirect
-
-from django.http import HttpResponseForbidden
-
+from django.contrib.auth.views import LoginView
 
 
 
 
-def login(request):
-    if request.method == 'POST':
-        usuario = request.POST['usuario']
-        password = request.POST['password']
-        try:
-            usuario = Usuario.objects.get(usuario=usuario, password=password)
-            # Autenticación exitosa, redirigir a la página de inicio
-            # Guardar el usuario en la sesión
-            request.session['usuario_id'] = usuario.id
-            return redirect('pagina_de_inicio')
-        except Usuario.DoesNotExist:
-            # Usuario no encontrado, mostrar un mensaje de error
-            mensaje = 'Usuario o contraseña incorrectos.'
-            return render(request, 'login.html', {'mensaje': mensaje})
-    return render(request, 'login.html')
+
+
+
+
+
+class CustomLoginView(LoginView):
+    def form_invalid(self, form):
+        messages.error(self.request, 'Usuario o contraseña incorrectos. Por favor, inténtalo de nuevo.')
+        return super().form_invalid(form)
+
+
 
 
 @login_required

@@ -1,10 +1,14 @@
 from django.urls import path
 from . import views
 from .views import exit
-
+from .views import CustomLoginView
 urlpatterns = [
     
     path('home/', views.home),
+    
+    path('login/', CustomLoginView.as_view(), name='login'),
+    #-------------------------------LOGIN--------------------------
+    
     path('gestionCliente/', views.vistaCliente),
     path('gestionVentas/', views.vistaVentas,name='vistaVentas'),
     path('registrarVenta/', views.registrarVenta),

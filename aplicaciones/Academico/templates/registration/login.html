@@ -42,6 +42,37 @@ integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xX
                                         <input type="submit" class="btn mt-4" value="Ingresar">
                                        <!-- <p class="mb-0 mt-4 text-center"><a href="#0" class="link">¿Olvidaste tu contraseña?</a></p>-->
                                       </div>
+                                      {% if form.errors %}
+                                        
+                                      {% for field in form  %}
+                                  
+                                      {% if fields.errors %}
+                                  
+                                      {% for error in field.errors %}
+                                          {{ error|escape}}
+                                      
+                                      {% endfor %}
+                                      
+                                      
+                                  {% endif %}
+                                      
+                                      
+                                  {% endfor %}
+
+                                  
+                                  {% if form.non_field_errors %}
+                                  
+                                  {% for error in form.non_field_errors  %}
+                                      {{error|escape}}
+                                  {% endfor %}
+                                      
+                                      
+                                  {% endif %}
+                                      
+                                      
+
+
+                                  {%endif%}
                                   </div>
                               </div>
                             <div class="card-back">
@@ -70,6 +101,37 @@ integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xX
                                                 
                                                 <input type="submit" class="btn mt-4" value="Ingresar">
                                   </div>
+                                  {% if form.errors %}
+                                        
+                                  {% for field in form  %}
+                              
+                                  {% if fields.errors %}
+                              
+                                  {% for error in field.errors %}
+                                      {{ error|escape}}
+                                  
+                                  {% endfor %}
+                                  
+                                  
+                              {% endif %}
+                                  
+                                  
+                              {% endfor %}
+
+                              
+                              {% if form.non_field_errors %}
+                              
+                              {% for error in form.non_field_errors  %}
+                                  {{error|escape}}
+                              {% endfor %}
+                                  
+                                  
+                              {% endif %}
+                                  
+                                  
+
+
+                              {%endif%}
                               </div>
                           </div>
                       </div>
